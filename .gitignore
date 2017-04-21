@@ -10,3 +10,10 @@
 Будет удалено .idea/workspace.xml
 Будет удалено build/
 Будет удалено src/main/resources/
+/gradlew
+/gradlew.bat
+/.idea/
+/build/
+/.gradle/
+/database/
+/gradle/
