@@ -15,6 +15,7 @@ import java.util.Objects;
 @FunctionalInterface
 public interface Function2<PARAMETER1,PARAMETER2, RESULT> {
 
+
     /**
      * Applies this function to the given argument.
      *
@@ -22,5 +23,9 @@ public interface Function2<PARAMETER1,PARAMETER2, RESULT> {
      * @return the function result
      */
     RESULT apply(PARAMETER1 parameter1, PARAMETER2 parameter2);
+
+    public default String get(){
+        return "asd";
+    };
 
 }
