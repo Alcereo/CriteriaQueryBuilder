@@ -1,7 +1,5 @@
-package ru.alcereo.entities.ru.alcereo.utils;
+package ru.alcereo.futils;
 
-
-import java.util.Objects;
 
 /**
  * Represents a function that accepts one two arguments and produces a result.
@@ -24,8 +22,5 @@ public interface Function2<PARAMETER1,PARAMETER2, RESULT> {
      */
     RESULT apply(PARAMETER1 parameter1, PARAMETER2 parameter2);
 
-    public default String get(){
-        return "asd";
-    };
 
 }

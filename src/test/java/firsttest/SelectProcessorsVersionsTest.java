@@ -1,20 +1,16 @@
 package firsttest;
 
-import org.hibernate.Interceptor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
-import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import ru.alcereo.entities.CommandsEntity;
 import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
-import ru.alcereo.entities.ru.alcereo.utils.Function2;
+import ru.alcereo.futils.Function2;
 
-import javax.persistence.Entity;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
 import java.math.BigDecimal;
@@ -22,8 +18,6 @@ import java.math.BigInteger;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Created by alcereo on 16.04.17.
