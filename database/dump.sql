@@ -365,6 +365,7 @@ COPY parameters (id, name, id_command) FROM stdin;
 2	latency	4
 3	latency	5
 4	proc	6
+5	admin	4
 \.
 
 
@@ -395,7 +396,6 @@ COPY processors_commands (id, id_processor, id_command) FROM stdin;
 1	2	1
 3	3	1
 4	4	1
-5	5	1
 6	2	2
 7	3	2
 8	2	3
