@@ -9,7 +9,9 @@ import java.util.Set;
  * Created by alcereo on 15.04.17.
  */
 @Entity
-@Table(name = "processors", schema = "public", catalog = "TestDB")
+@Table(name = "processors",
+//        schema = "public",
+        catalog = "TestDB")
 public class ProcessorsEntity {
     private int id;
     private String name;
@@ -28,7 +30,7 @@ public class ProcessorsEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = true, length = -1)
+    @Column(name = "name", nullable = true, length = 64)
     public String getName() {
         return name;
     }
@@ -68,7 +70,21 @@ public class ProcessorsEntity {
     }
 
     @ManyToMany
-    @JoinTable(name = "processors_commands", catalog = "TestDB", schema = "public", joinColumns = @JoinColumn(name = "id_processor", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_command", referencedColumnName = "id", nullable = false))
+    @JoinTable(
+            name = "processors_commands",
+            catalog = "TestDB",
+//            schema = "public",
+            joinColumns = @JoinColumn(
+                    name = "id_processor",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "id_command",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
     public Set<CommandsEntity> getCommands() {
         return commands;
     }
@@ -78,7 +94,20 @@ public class ProcessorsEntity {
     }
 
     @ManyToMany
-    @JoinTable(name = "processors_events", catalog = "TestDB", schema = "public", joinColumns = @JoinColumn(name = "id_processor", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_event", referencedColumnName = "id", nullable = false))
+    @JoinTable(
+            name = "processors_events",
+            catalog = "TestDB",
+//            schema = "public",
+            joinColumns = @JoinColumn(
+                    name = "id_processor",
+                    referencedColumnName = "id",
+                    nullable = false),
+            inverseJoinColumns = @JoinColumn(
+                    name = "id_event",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
     public Set<EventsEntity> getEvents() {
         return events;
     }

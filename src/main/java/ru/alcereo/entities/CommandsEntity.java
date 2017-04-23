@@ -7,7 +7,9 @@ import java.util.Set;
  * Created by alcereo on 15.04.17.
  */
 @Entity
-@Table(name = "commands", schema = "public", catalog = "TestDB")
+@Table(name = "commands",
+//        schema = "public",
+        catalog = "TestDB")
 public class CommandsEntity {
     private int id;
     private String name;
@@ -25,7 +27,7 @@ public class CommandsEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = true, length = -1)
+    @Column(name = "name", nullable = true, length = 64)
     public String getName() {
         return name;
     }

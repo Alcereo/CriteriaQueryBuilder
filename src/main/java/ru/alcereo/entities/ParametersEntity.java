@@ -6,7 +6,9 @@ import javax.persistence.*;
  * Created by alcereo on 15.04.17.
  */
 @Entity
-@Table(name = "parameters", schema = "public", catalog = "TestDB")
+@Table(name = "parameters",
+//        schema = "public",
+        catalog = "TestDB")
 public class ParametersEntity {
     private int id;
     private String name;
@@ -23,7 +25,7 @@ public class ParametersEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = true, length = -1)
+    @Column(name = "name", nullable = true, length = 64)
     public String getName() {
         return name;
     }
