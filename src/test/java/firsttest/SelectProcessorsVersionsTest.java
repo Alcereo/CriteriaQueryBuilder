@@ -62,6 +62,55 @@ public class SelectProcessorsVersionsTest {
     }
 
     @Test
+    public void selectVersionsTestSubselect() {
+
+        Session session = factory.openSession();
+
+        Transaction tx = session.beginTransaction();
+
+
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+
+        CriteriaQuery<ProcessorsVersionsEntity> criteria = builder.createQuery(ProcessorsVersionsEntity.class);
+        Root<ProcessorsVersionsEntity> root = criteria.from(ProcessorsVersionsEntity.class);
+
+        Subquery<ProcessorsVersionsEntity> criteria2 = criteria.subquery(ProcessorsVersionsEntity.class);
+        Root<ProcessorsVersionsEntity> root2 = criteria2.from(ProcessorsVersionsEntity.class);
+        Subquery<ProcessorsVersionsEntity> whereIN = criteria2.select(root2).where(root2.in(2));
+
+        CriteriaQuery<ProcessorsVersionsEntity> select = criteria.select(root)
+                .where(
+                        builder.not(root.in(whereIN))
+                );
+
+        select.where(
+                builder.and(
+                        select.getRestriction(),
+                        root.isNotNull()
+                )
+        );
+
+        select.where(
+                builder.and(
+                        select.getRestriction(),
+                        root.in(1,2,3)
+                )
+        );
+
+        session.createQuery(select)
+                .setFirstResult(1)
+                .setMaxResults(1)
+                .list()
+                .forEach(System.out::println);
+
+//        ----
+
+        tx.commit();
+        session.close();
+
+    }
+
+    @Test
     public void selectVersionsFinalTest(){
 
         Class<ProcessorsVersionsEntity>StartEntity=ProcessorsVersionsEntity.class;

@@ -1,9 +1,6 @@
 package firsttest;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.metamodel.internal.SingularAttributeImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.alcereo.criteria.PredicateBuilder;
@@ -11,10 +8,7 @@ import ru.alcereo.entities.CommandsEntity;
 import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
-import javax.persistence.criteria.Predicate;
-import java.util.Map;
 
 /**
  * Created by alcereo on 22.04.17.
@@ -37,13 +31,13 @@ public class PredicateBuilderTest {
 
         PredicateBuilder
                 .selectFrom(ProcessorsVersionsEntity.class)
-                .addLink(ParametersEntity.class, PARAMS)
-                .addFilter((cb, links) -> {
+                .addWhiteLink(ParametersEntity.class, PARAMS)
+                .addWhiteFilter((cb, links) -> {
                     From params = links.get(PARAMS);
 
-                    return cb.and(
+                    return cb.or(
                             params.get("id").in(1),
-                            params.isNotNull()
+                            params.isNull()
                     );
                 }).getResultList()
                 .forEach(System.out::println);
@@ -53,19 +47,29 @@ public class PredicateBuilderTest {
     @Test
     public void selectVersionsWithSomeFilters(){
 
-        final String PARAMETERS = "ParametersEntity";
+        final String PARAMETERS = "PARAMETERS_LINK";
 
+        String COMMANDS = "commands";
         PredicateBuilder
                 .selectFrom(ProcessorsVersionsEntity.class)
-                .addLink(ParametersEntity.class, PARAMETERS)
-                .addFilter(
+                .addWhiteLink(ParametersEntity.class, PARAMETERS)
+                .addWhiteFilter(
                         (cb, links) ->
+                                cb.or(
                                 links.get(PARAMETERS)
                                         .get("id")
                                         .in(1)
+                                        ,
+                                        links.get(PARAMETERS)
+                                        .isNull()
+                                )
+                )
+                .addBlackLink(CommandsEntity.class, COMMANDS)
+                .addBlackFilter(
+                        (cb, links) ->
+                                links.get(COMMANDS).get("id").in(2)
                 )
                 .getResultList()
                 .forEach(System.out::println);
-
     }
 }
