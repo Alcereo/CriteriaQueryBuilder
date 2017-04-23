@@ -8,9 +8,14 @@ import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
 import ru.alcereo.futils.Function2;
+import ru.alcereo.futils.Tuple2;
+import ru.alcereo.futils.Tuple3;
 
 import javax.persistence.criteria.*;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -33,25 +38,25 @@ public class PredicateBuilder<TYPE> {
         PredicateBuilder.factory = factory;
     }
 
-    public PredicateBuilder(Class<TYPE> startEntity) {
+    private PredicateBuilder(Class<TYPE> startEntity) {
         this.startEntity = startEntity;
     }
 
-    public PredicateBuilder<TYPE> addLink(Class entity, String name){
+    public PredicateBuilder<TYPE> addLink(Class entity, String name) {
         joinsContainer.put(entity, name);
         return this;
     }
 
-    public PredicateBuilder<TYPE> addFilter(Function2<CriteriaBuilder, Map<String, From>, Predicate> predicate){
+    public PredicateBuilder<TYPE> addFilter(Function2<CriteriaBuilder, Map<String, From>, Predicate> predicate) {
         predicates.add(predicate);
         return this;
     }
 
-    public static <TYPE> PredicateBuilder<TYPE> selectFrom(Class<TYPE> entity){
+    public static <TYPE> PredicateBuilder<TYPE> selectFrom(Class<TYPE> entity) {
         return new PredicateBuilder<>(entity);
     }
 
-    public List<TYPE> getResultList(){
+    public List<TYPE> getResultList() {
 
         Session session = factory.openSession();
         Transaction tx = session.beginTransaction();
@@ -65,25 +70,105 @@ public class PredicateBuilder<TYPE> {
 
         joins.put("root", root);
 
-        From[] lastJoin = {root};
+        Map<Subquery, Tuple3<From,String,Join>> subqueries = new HashMap<>();
 
-        path.forEach((s, pView)->{
-            if (pView.isSimpleJoin()){
-                System.out.println("add simple join to "+pView.getName());
+        From lastJoin = root;
 
-                lastJoin[0] = lastJoin[0].join(s);
+        for (Entry<String, PredicateView> entry : path.entrySet()) {
+            PredicateView pView = entry.getValue();
+            String s = entry.getKey();
+
+            if (pView.isSimpleJoin()) {
+                System.out.println("add simple join to " + pView.getName());
+
+                lastJoin = lastJoin.join(s);
 
                 joins.put(
                         pView.getName(),
-                        lastJoin[0]
+                        lastJoin
                 );
-            }else{
+            } else {
                 System.out.println("add simpleJoin join");
 
-            }
-        });
+                Subquery subquery = criteria.subquery(lastJoin.getJavaType());
+                Root subRoot = subquery.from(lastJoin.getJavaType());
+                Join subJoin = subRoot.join(s, JoinType.LEFT);
 
-        Predicate finalPredicate = cb.and(
+                SingularAttribute id =
+                        (SingularAttribute) subRoot.getModel()
+                                .getSingularAttributes()
+                                .stream()
+                                .filter(o -> ((SingularAttribute) o).isId())
+                                .findFirst().get();
+
+                subquery.select(subRoot.get(id));
+                subquery.groupBy(subRoot.get(id));
+
+                subqueries.put(
+                        subquery,
+                        new Tuple3<>(
+                                lastJoin,
+                                pView.getName(),
+                                subJoin
+                        )
+                );
+
+                lastJoin = lastJoin.join(s, JoinType.LEFT);
+
+                joins.put(
+                        pView.getName(),
+                        lastJoin
+                );
+
+            }
+        }
+
+
+//        predicate to subqueries
+
+        Predicate finalPredicate;
+
+        ArrayList<Predicate> wherePredicates = new ArrayList<>();
+
+        for (Entry<Subquery, Tuple3<From, String, Join>> subqueryEntry: subqueries.entrySet()) {
+            Subquery subquery = subqueryEntry.getKey();
+            From from = subqueryEntry.getValue().getValue1();
+            String name = subqueryEntry.getValue().getValue2();
+            Join subJoin = subqueryEntry.getValue().getValue3();
+
+            From fromBefore = joins.get(name);
+            joins.put(name, subJoin);
+
+            finalPredicate = cb.and(
+                    predicates
+                            .stream()
+                            .map(predicate -> predicate.apply(cb, joins))
+                            .collect(Collectors.toList())
+                            .toArray(new Predicate[0])
+            );
+
+            subquery.having(
+                    cb.equal(
+                            cb.<Integer>max(cb.<Integer>selectCase()
+                                    .when(
+                                            cb.not(finalPredicate),
+                                            cb.literal(1)
+                                    ).<Integer>otherwise(cb.literal(0))
+                            )
+                            ,
+                            cb.literal(0)
+                    )
+            );
+
+            wherePredicates.add(from.in(subquery));
+
+            joins.put(name, fromBefore);
+
+        }
+
+//        predicate to simple joins
+
+        finalPredicate = cb.and(
                 predicates
                         .stream()
                         .map(predicate -> predicate.apply(cb, joins))
@@ -91,12 +176,15 @@ public class PredicateBuilder<TYPE> {
                         .toArray(new Predicate[0])
         );
 
-        ((Join)lastJoin[0]).on(finalPredicate);
+        if (!lastJoin.equals(root))
+            ((Join) lastJoin).on(finalPredicate);
+        else
+            criteria.where(finalPredicate);
 
         CriteriaQuery<TYPE> selectFinish =
                 criteria.select(root)
-//                .where(commandJoin.in(subqueryCommand))
-                .distinct(true);
+                        .where(cb.and(wherePredicates.toArray(new Predicate[0])))
+                        .distinct(true);
 
         List<TYPE> resultList = session.createQuery(selectFinish).getResultList();
 
@@ -106,27 +194,28 @@ public class PredicateBuilder<TYPE> {
 
     private Map<String, PredicateView> getPathMap() {
 
+        Map<String, PredicateView> result = new LinkedHashMap<>();
+
         //TODO: Задать определение пути
-        Map<String, PredicateView> path = new LinkedHashMap<>();
-        path.put("processorsUsed",
+        result.put("processorsUsed",
                 new PredicateView(
                         true,
                         joinsContainer.get(ProcessorsEntity.class)
                 ));
-        path.put("commands",
+        result.put("commands",
                 new PredicateView(
-                        true,
+                        false,
                         joinsContainer.get(CommandsEntity.class)
         ));
-//        path.put("parameters", new PredicateView(
-//                true,
-//                joinsContainer.get(ParametersEntity.class)
-//        ));
+        result.put("parameters", new PredicateView(
+                true,
+                joinsContainer.get(ParametersEntity.class)
+        ));
 
-        return path;
+        return result;
     }
 
-    private class PredicateView{
+    private class PredicateView {
 
         private boolean simpleJoin;
         private String name;

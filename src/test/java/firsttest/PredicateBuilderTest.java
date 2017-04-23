@@ -53,19 +53,16 @@ public class PredicateBuilderTest {
     @Test
     public void selectVersionsWithSomeFilters(){
 
-        final String PARAMS = "params";
+        final String PARAMETERS = "ParametersEntity";
 
         PredicateBuilder
                 .selectFrom(ProcessorsVersionsEntity.class)
-                .addLink(CommandsEntity.class, PARAMS)
-                .addFilter((cb, links) ->
-                        cb.or(
-                                cb.greaterThan(
-                                        links.get(PARAMS).get("id"),
-                                        3)
-                                ,
-                                links.get(PARAMS).get("id").in(1)
-                                )
+                .addLink(ParametersEntity.class, PARAMETERS)
+                .addFilter(
+                        (cb, links) ->
+                                links.get(PARAMETERS)
+                                        .get("id")
+                                        .in(1)
                 )
                 .getResultList()
                 .forEach(System.out::println);
