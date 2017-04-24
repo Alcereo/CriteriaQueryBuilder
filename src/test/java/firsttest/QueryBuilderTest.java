@@ -2,10 +2,7 @@ package firsttest;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.CommandsEntity;
 import ru.alcereo.entities.ParametersEntity;
@@ -13,6 +10,10 @@ import ru.alcereo.entities.ProcessorsEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
 
 import javax.persistence.criteria.From;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * Created by alcereo on 22.04.17.
@@ -23,17 +24,107 @@ public class QueryBuilderTest {
     private static QueryBuilder qBuilder;
 
     @BeforeClass
-    public static void initFactory() {
+    public static void initDB() {
         factory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
 
-//        initDAta
+//        initData();
+
+        qBuilder = new QueryBuilder();
+        qBuilder.setFactory(factory);
+    }
+
+    private static void initData() {
         try (Session session = factory.openSession()) {
 
             ProcessorsVersionsEntity version;
             ProcessorsEntity proc;
+            ParametersEntity param;
+            CommandsEntity command;
 
             session.beginTransaction();
 
+            CommandsEntity command1 = new CommandsEntity();
+            command = command1;
+            command.setId(1);
+            command.setName("last error");
+            session.saveOrUpdate(command);
+            {
+
+            }
+
+
+            CommandsEntity command2 = new CommandsEntity();
+            command = command2;
+            command.setId(2);
+            command.setName("pull cash");
+            session.saveOrUpdate(command);
+
+            {
+                param = new ParametersEntity();
+                param.setId(1);
+                param.setName("count");
+                param.setCommand(command);
+                session.saveOrUpdate(param);
+            }
+
+
+            CommandsEntity command3 = new CommandsEntity();
+            command = command3;
+            command.setId(3);
+            command.setName("count cash");
+            session.saveOrUpdate(command);
+            {
+
+            }
+
+            CommandsEntity command4 = new CommandsEntity();
+            command = command4;
+            command.setId(4);
+            command.setName("shutdown");
+            session.saveOrUpdate(command);
+            {
+                param = new ParametersEntity();
+                param.setId(2);
+                param.setName("latency");
+                param.setCommand(command);
+                session.saveOrUpdate(param);
+
+                param = new ParametersEntity();
+                param.setId(5);
+                param.setName("admin");
+                param.setCommand(command);
+                session.saveOrUpdate(param);
+            }
+
+            CommandsEntity command5 = new CommandsEntity();
+            command = command5;
+            command.setId(5);
+            command.setName("reboot");
+            session.saveOrUpdate(command);
+            {
+                param = new ParametersEntity();
+                param.setId(3);
+                param.setName("latency");
+                param.setCommand(command);
+                session.saveOrUpdate(param);
+            }
+
+
+            CommandsEntity command6 = new CommandsEntity();
+            command = command6;
+            command.setId(6);
+            command.setName("get status");
+            session.saveOrUpdate(command);
+            {
+                param = new ParametersEntity();
+                param.setId(4);
+                param.setName("proc");
+                param.setCommand(command);
+                session.saveOrUpdate(param);
+            }
+
+
+//            VERSIONS
             version = new ProcessorsVersionsEntity();
             version.setId(1);
             version.setName("first version");
@@ -44,12 +135,25 @@ public class QueryBuilderTest {
                 proc.setId(2);
                 proc.setName("cash in");
                 proc.setProcessorVersion(version);
+                {
+                    proc.setCommands(new HashSet<>());
+                    proc.getCommands().add(command1);
+                    proc.getCommands().add(command2);
+                    proc.getCommands().add(command3);
+                }
                 session.saveOrUpdate(proc);
+
 
                 proc = new ProcessorsEntity();
                 proc.setId(3);
                 proc.setName("cash out");
                 proc.setProcessorVersion(version);
+                {
+                    proc.setCommands(new HashSet<>());
+                    proc.getCommands().add(command1);
+                    proc.getCommands().add(command2);
+                    proc.getCommands().add(command3);
+                }
                 session.saveOrUpdate(proc);
             }
 
@@ -65,6 +169,10 @@ public class QueryBuilderTest {
                 proc.setName("monitor");
                 proc.setProcessorVersion(version);
                 session.saveOrUpdate(proc);
+                {
+                    proc.setCommands(new HashSet<>());
+                    proc.getCommands().add(command1);
+                }
             }
 
             version = new ProcessorsVersionsEntity();
@@ -78,17 +186,20 @@ public class QueryBuilderTest {
                 proc.setName("admin");
                 proc.setProcessorVersion(version);
                 session.saveOrUpdate(proc);
+                {
+                    proc.setCommands(new HashSet<>());
+                    proc.getCommands().add(command4);
+                    proc.getCommands().add(command5);
+                    proc.getCommands().add(command6);
+                }
             }
 
 
 
             session.flush();
 
-        };
-
-
-        qBuilder = new QueryBuilder();
-        qBuilder.setFactory(factory);
+        }
+        ;
     }
 
     @Test
@@ -154,4 +265,26 @@ public class QueryBuilderTest {
                 .forEach(System.out::println);
 
     }
+
+    @Test
+    public void selectParametersTest(){
+
+        List<CommandsEntity> builderList = qBuilder
+                .selectFrom(CommandsEntity.class)
+                .addWhiteFilter((cb, links, root) -> cb.greaterThanOrEqualTo(root.get("id"), 2))
+                .addBlackFilter((cb, links, root) -> root.in(5))
+                .getResultList();
+
+        List<CommandsEntity> trueList = factory
+                .openSession()
+                .byMultipleIds(CommandsEntity.class)
+                .multiLoad(2, 3, 4, 6);
+
+        Assert.assertEquals(
+                builderList,
+                trueList
+        );
+
+    }
+
 }

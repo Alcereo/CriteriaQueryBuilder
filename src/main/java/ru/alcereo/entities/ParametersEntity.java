@@ -1,6 +1,11 @@
 package ru.alcereo.entities;
 
+import org.hibernate.annotations.*;
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Created by alcereo on 15.04.17.
@@ -56,6 +61,7 @@ public class ParametersEntity {
     }
 
     @ManyToOne
+    @LazyToOne(LazyToOneOption.PROXY)
     @JoinColumn(name = "id_command", referencedColumnName = "id", nullable = false)
     public CommandsEntity getCommand() {
         return command;
@@ -63,5 +69,13 @@ public class ParametersEntity {
 
     public void setCommand(CommandsEntity command) {
         this.command = command;
+    }
+
+    @Override
+    public String toString() {
+        return "ParametersEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
