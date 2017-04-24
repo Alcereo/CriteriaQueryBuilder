@@ -9,9 +9,10 @@ import java.util.Set;
  * Created by alcereo on 15.04.17.
  */
 @Entity
-@Table(name = "processors",
+@Table(name = "processors"
 //        schema = "public",
-        catalog = "TestDB")
+//        catalog = "TestDB"
+)
 public class ProcessorsEntity {
     private int id;
     private String name;
@@ -72,7 +73,7 @@ public class ProcessorsEntity {
     @ManyToMany
     @JoinTable(
             name = "processors_commands",
-            catalog = "TestDB",
+//            catalog = "TestDB",
 //            schema = "public",
             joinColumns = @JoinColumn(
                     name = "id_processor",
@@ -96,7 +97,7 @@ public class ProcessorsEntity {
     @ManyToMany
     @JoinTable(
             name = "processors_events",
-            catalog = "TestDB",
+//            catalog = "TestDB",
 //            schema = "public",
             joinColumns = @JoinColumn(
                     name = "id_processor",

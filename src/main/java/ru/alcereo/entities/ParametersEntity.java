@@ -6,9 +6,10 @@ import javax.persistence.*;
  * Created by alcereo on 15.04.17.
  */
 @Entity
-@Table(name = "parameters",
+@Table(name = "parameters"
 //        schema = "public",
-        catalog = "TestDB")
+//        catalog = "TestDB"
+)
 public class ParametersEntity {
     private int id;
     private String name;

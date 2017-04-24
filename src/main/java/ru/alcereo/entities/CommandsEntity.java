@@ -7,9 +7,10 @@ import java.util.Set;
  * Created by alcereo on 15.04.17.
  */
 @Entity
-@Table(name = "commands",
+@Table(name = "commands"
 //        schema = "public",
-        catalog = "TestDB")
+//        catalog = "TestDB")
+)
 public class CommandsEntity {
     private int id;
     private String name;

@@ -7,9 +7,10 @@ import java.util.Set;
  * Created by alcereo on 15.04.17.
  */
 @Entity
-@Table(name = "processors_versions",
+@Table(name = "processors_versions"
 //        schema = "public",
-        catalog = "TestDB")
+//        catalog = "TestDB"
+)
 public class ProcessorsVersionsEntity {
     private int id;
     private String name;
