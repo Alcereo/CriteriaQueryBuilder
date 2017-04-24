@@ -4,16 +4,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.*;
 import ru.alcereo.criteria.QueryBuilder;
-import ru.alcereo.entities.CommandsEntity;
-import ru.alcereo.entities.ParametersEntity;
-import ru.alcereo.entities.ProcessorsEntity;
-import ru.alcereo.entities.ProcessorsVersionsEntity;
+import ru.alcereo.entities.*;
+import ru.alcereo.futils.Function2;
 
 import javax.persistence.criteria.From;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * Created by alcereo on 22.04.17.
@@ -245,7 +241,7 @@ public class QueryBuilderTest {
                 .addBlackLink(CommandsEntity.class, COMMANDS)
                 .addBlackFilter(
                         (cb, links, root) ->
-                                links.get(COMMANDS).get("id").in(2)
+                                links.get(COMMANDS).get("id").in(5)
                 )
                 .getResultList()
                 .forEach(System.out::println);
@@ -271,7 +267,9 @@ public class QueryBuilderTest {
 
         List<CommandsEntity> builderList = qBuilder
                 .selectFrom(CommandsEntity.class)
-                .addWhiteFilter((cb, links, root) -> cb.greaterThanOrEqualTo(root.get("id"), 2))
+                .addWhiteFilter((cb, links, root) ->
+                        cb.greaterThanOrEqualTo(root.get("id"), 2)
+                )
                 .addBlackFilter((cb, links, root) -> root.in(5))
                 .getResultList();
 
@@ -286,5 +284,30 @@ public class QueryBuilderTest {
         );
 
     }
+
+    @Test
+    public void selectDemoTest(){
+
+        Integer[] ids = {1, 2, 3};
+//        Integer[] ids = null;
+
+        QueryBuilder.QueryData<ProcessorsVersionsEntity> query =
+                qBuilder.selectFrom(ProcessorsVersionsEntity.class);
+
+
+        if (ids!=null){
+            query
+                    .addWhiteLink(CommandsEntity.class, CommandsEntity.i())
+                    .addWhiteFilter((cb, links, root) ->
+                            CommandsEntity.id(links).in(ids)
+                    );
+        }
+
+        query
+                .getResultList()
+                .forEach(System.out::println);
+
+    }
+
 
 }

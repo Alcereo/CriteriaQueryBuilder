@@ -53,6 +53,10 @@ public class QueryBuilder {
         Predicate finalPredicate;
         Map<String, From> joins = new HashMap<>();
 
+        //
+
+
+        //
         List<PathPoint> path = getPathMap(startEntity, pathLinks);
 
         From lastJoin = root;

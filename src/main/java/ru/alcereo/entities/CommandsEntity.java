@@ -1,6 +1,9 @@
 package ru.alcereo.entities;
 
 import javax.persistence.*;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Path;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,6 +30,10 @@ public class CommandsEntity {
         this.id = id;
     }
 
+    public static Path id(Map<String, From> links){
+        return links.get(CommandsEntity.i()).get("id");
+    };
+
     @Basic
     @Column(name = "name", nullable = true, length = 64)
     public String getName() {
@@ -36,6 +43,8 @@ public class CommandsEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+    public static String name(){return "name";};
 
     @Override
     public boolean equals(Object o) {
@@ -81,5 +90,9 @@ public class CommandsEntity {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public static String i(){
+        return "CommandEntity";
     }
 }
