@@ -1,1 +1,3 @@
 rootProject.name = 'CriteriaHibernateTesting'
+include 'metamodelGeneration'
+

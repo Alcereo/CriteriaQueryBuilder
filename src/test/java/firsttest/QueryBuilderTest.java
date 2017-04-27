@@ -288,22 +288,11 @@ public class QueryBuilderTest {
     @Test
     public void selectDemoTest(){
 
-        Integer[] ids = {1, 2, 3};
-//        Integer[] ids = null;
-
-        QueryBuilder.QueryData<ProcessorsVersionsEntity> query =
-                qBuilder.selectFrom(ProcessorsVersionsEntity.class);
-
-
-        if (ids!=null){
-            query
-                    .addWhiteLink(CommandsEntity.class, CommandsEntity.i())
-                    .addWhiteFilter((cb, links, root) ->
-                            CommandsEntity.id(links).in(ids)
-                    );
-        }
-
-        query
+        qBuilder
+                .selectFrom(ProcessorsVersionsEntity.class)
+                .addWhiteLink(ParametersEntity.class,"com")
+                .addWhiteFilter((cb, links, root) -> links.get("com").get("id").in(1,2))
+                .addBlackFilter((cb, links, root) -> root.get("id").in(3))
                 .getResultList()
                 .forEach(System.out::println);
 
