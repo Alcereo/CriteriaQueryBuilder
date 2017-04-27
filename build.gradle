@@ -31,16 +31,3 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-context', version: '5.0.0.M5'
 
 }
-
-
-task metaJar(type: Jar){
-
-    baseName = project.name + 'EntityMeta'
-
-    exclude "ru/alcereo/*"
-
-    include "ru/alcereo/meta"
-
-    with jar
-
-}
