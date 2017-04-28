@@ -2,6 +2,8 @@ package ru.alcereo.usability;
 
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.SingularAttribute;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,6 +31,48 @@ public class Attributive<PARENT_TYPE, SELF_TYPE> {
         else
             return viewName;
     }
+
+//    ciclic methods
+
+    public final UPredicate in(List<SELF_TYPE> subjects){
+        InPredictive<SELF_TYPE> result = new InPredictive<>();
+
+        result.setAttributive(this);
+        result.setSubjects(subjects);
+
+        return result;
+    }
+
+    @SafeVarargs
+    public final UPredicate in(SELF_TYPE... subjects){
+        InPredictive<SELF_TYPE> result = new InPredictive<>();
+
+        result.setAttributive(this);
+        result.setSubjects(subjects);
+
+        return result;
+    }
+
+
+    public UPredicate equal(SELF_TYPE subject){
+        EqualPredictive<SELF_TYPE> result = new EqualPredictive<>();
+
+        result.setAttributive(this);
+        result.setSubject(subject);
+
+        return result;
+    }
+
+    public UPredicate greaterThan(SELF_TYPE subject){
+        GreaterThanPredictive result = new GreaterThanPredictive<>();
+
+        result.setAttributive(this);
+        result.setSubject(subject);
+
+        return result;
+    }
+
+//    GS-s
 
     public Attributive<?, PARENT_TYPE> getParent() {
         return parent;

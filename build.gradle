@@ -22,6 +22,7 @@ dependencies {
     compile "org.postgresql:postgresql:9.4.1212.jre7"
 
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.9.Final'
+    compile group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.2.9.Final'
 
     compile "org.slf4j:slf4j-api:1.7.21"
     compile "org.slf4j:slf4j-log4j12:1.7.21"

@@ -7,6 +7,7 @@ import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
 import ru.alcereo.usability.*;
+import ru.alcereo.usability.meta.Parameters_;
 
 import javax.persistence.metamodel.*;
 
@@ -79,11 +80,13 @@ public class ObjectPredicateObjTest {
         and.getChildPredicates().add(inPredictive);
 
 
-//
+        //
 
         System.out.println("!!!+");
         mainPredicate.getLinks().forEach(System.out::println);
         System.out.println("!!!-");
+
+        //
 
         qBuilder
                 .selectFrom(ProcessorsVersionsEntity.class)
@@ -124,6 +127,80 @@ public class ObjectPredicateObjTest {
                 )
                 .getResultList()
                 .forEach(System.out::println);
+
+    }
+
+    @Test
+    public void testToConstruct(){
+
+        final String PARAMETERS = ParametersEntity.class.getName();
+
+//        Attributive<?,ParametersEntity> parametersTable = new Attributive<>();
+//        parametersTable.setViewName("PARAMETERS_LINK");
+//
+//        Attributive<ParametersEntity,Integer> parameters_id = new Attributive<>();
+//        parameters_id.setParent(parametersTable);
+//        parameters_id.setAttribute(
+//                (SingularAttribute<ParametersEntity, Integer>)
+//                        factory.getMetamodel()
+//                                .entity(ParametersEntity.class)
+//                                .getSingularAttribute("id", Integer.class)
+//        );
+//
+//        Attributive<ParametersEntity,String> parameters_name = new Attributive<>();
+//        parameters_name.setParent(parametersTable);
+//        parameters_name.setAttribute(
+//                (SingularAttribute<ParametersEntity, String>)
+//                        factory.getMetamodel()
+//                                .entity(ParametersEntity.class)
+//                                .getSingularAttribute("name", String.class)
+//        );
+
+//        mainPredicate =
+//                parameters_name.in("latency", "count")
+//                        .and(parameters_id.equal(1)
+//                                        .or(parameters_id.greaterThan(3))
+//                                        .or(parameters_id.greaterThan(4))
+//                        ).and(parameters_name.equal("Alcereo")
+//                );
+
+        //
+
+//        Attribute constaruct
+
+        UPredicate mainPredicate;
+
+        mainPredicate =
+                Parameters_.name().in("latency", "count")
+                        .and(Parameters_.id().equal(1)
+                                        .or(Parameters_.id().greaterThan(3))
+                                        .or(Parameters_.id().greaterThan(4))
+                        ).and(Parameters_.name().equal("Alcereo")
+                );
+
+//
+
+        System.out.println("!!!+");
+        mainPredicate.getLinks().forEach(System.out::println);
+        System.out.println("!!!-");
+
+        //
+
+        qBuilder
+                .selectFrom(ProcessorsVersionsEntity.class)
+                .addWhiteLink(ParametersEntity.class, PARAMETERS)
+                .addWhiteFilter(
+                        (cb, links, root) ->
+                                mainPredicate.buildCriteriaPredicate(
+                                        new CriteriaBuildData(
+                                                links,
+                                                cb
+                                        )
+                                )
+                )
+                .getResultList()
+                .forEach(System.out::println);
+
 
     }
 
