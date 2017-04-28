@@ -9,48 +9,31 @@ import java.util.*;
 /**
  * Created by alcereo on 27.04.17.
  */
-public class InPredictive<TYPE> implements Predictive {
+public class InPredictive<TYPE> extends SingleAttributedPredicative<TYPE> {
 
-    private Attributive<?, TYPE> attributive;
     private List<TYPE> subjects;
 
     public InPredictive(Attributive<?, TYPE> attributive, List<TYPE> subjects) {
-        this.attributive = attributive;
+        setAttributive(attributive);
         this.subjects = subjects;
     }
 
     public InPredictive() {
     }
 
+
     @Override
     public Predicate buildCriteriaPredicate(final CriteriaBuildData data) {
 
         CriteriaBuilder cb = data.getCb();
 
-        CriteriaBuilder.In<TYPE> result = cb.in(attributive.getExpression(data));
+        CriteriaBuilder.In<TYPE> result = cb.in(getAttributive().getExpression(data));
 
         for (TYPE subject : subjects) {
             result.<TYPE>value(subject);
         }
 
         return result;
-    }
-
-    @Override
-    public Set<String> getLinks() {
-        Set<String> result = new HashSet<>();
-        result.add(attributive.getLink());
-
-        return result;
-    }
-
-
-    public Attributive<?,TYPE> getAttributive() {
-        return attributive;
-    }
-
-    public void setAttributive(Attributive<?,TYPE> attributive) {
-        this.attributive = attributive;
     }
 
     public List<TYPE> getSubjects() {

@@ -65,12 +65,12 @@ public class ObjectPredicateObjTest {
 
         EqualPredictive<Integer> equalPredictive = new EqualPredictive<>();
         equalPredictive.setAttributive(parameters_id);
-        equalPredictive.setObject(1);
+        equalPredictive.setSubject(1);
         or.getChildPredicates().add(equalPredictive);
 
         GreaterThanPredictive<Integer> greaterThanPredictive = new GreaterThanPredictive<>();
         greaterThanPredictive.setAttributive(parameters_id);
-        greaterThanPredictive.setObject(3);
+        greaterThanPredictive.setSubject(3);
         or.getChildPredicates().add(greaterThanPredictive);
 
         InPredictive<String> inPredictive = new InPredictive<>();

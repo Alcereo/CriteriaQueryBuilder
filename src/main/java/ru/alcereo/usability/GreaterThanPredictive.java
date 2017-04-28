@@ -9,14 +9,10 @@ import java.util.*;
 /**
  * Created by alcereo on 28.04.17.
  */
-public  class  GreaterThanPredictive<TYPE extends Comparable<? super TYPE>> implements Predictive {
+public  class  GreaterThanPredictive<TYPE extends Comparable<? super TYPE>> extends BinaryPredicative<TYPE> {
 
-    private Attributive<?,TYPE> attributive;
-    private TYPE object;
-
-    public GreaterThanPredictive(Attributive<?,TYPE> attributive, TYPE object) {
-        this.attributive = attributive;
-        this.object = object;
+    public GreaterThanPredictive(Attributive<?, TYPE> attributive, TYPE subject) {
+        super(attributive, subject);
     }
 
     public GreaterThanPredictive() {
@@ -26,30 +22,7 @@ public  class  GreaterThanPredictive<TYPE extends Comparable<? super TYPE>> impl
     public Predicate buildCriteriaPredicate(final CriteriaBuildData data) {
         CriteriaBuilder cb = data.getCb();
 
-        return cb.greaterThan(attributive.getExpression(data), object);
+        return cb.greaterThan(getAttributive().getExpression(data), getSubject());
     }
 
-    @Override
-    public Set<String> getLinks() {
-        Set<String> result = new HashSet<>();
-        result.add(attributive.getLink());
-
-        return result;
-    }
-
-    public Attributive<?, TYPE> getAttributive() {
-        return attributive;
-    }
-
-    public void setAttributive(Attributive<?, TYPE> attributive) {
-        this.attributive = attributive;
-    }
-
-    public TYPE getObject() {
-        return object;
-    }
-
-    public void setObject(TYPE object) {
-        this.object = object;
-    }
 }
