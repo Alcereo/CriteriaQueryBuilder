@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by alcereo on 27.04.17.
  */
-public interface Predicate_Obj {
+public interface UPredicate {
 
     Predicate buildCriteriaPredicate(final CriteriaBuildData data);
 

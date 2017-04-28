@@ -4,13 +4,11 @@ import org.hibernate.SessionFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.alcereo.criteria.QueryBuilder;
-import ru.alcereo.entities.CommandsEntity;
 import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
 import ru.alcereo.usability.*;
 
 import javax.persistence.metamodel.*;
-import java.lang.reflect.Member;
 
 /**
  * Created by alcereo on 27.04.17.
@@ -57,28 +55,28 @@ public class ObjectPredicateObjTest {
                                 .getSingularAttribute("name", String.class)
         );
 
-        Predicate_Obj mainPredicate;
+        UPredicate mainPredicate;
 
-        AndPredicateObj and = new AndPredicateObj();
+        AndUPredicate and = new AndUPredicate();
         mainPredicate = and;
 
-        OrPredicateObj or = new OrPredicateObj();
-        and.getPredicateObjs().add(or);
+        OrUPredicate or = new OrUPredicate();
+        and.getChildPredicates().add(or);
 
         EqualPredictive<Integer> equalPredictive = new EqualPredictive<>();
         equalPredictive.setAttributive(parameters_id);
         equalPredictive.setObject(1);
-        or.getPredicateObjs().add(equalPredictive);
+        or.getChildPredicates().add(equalPredictive);
 
         GreaterThanPredictive<Integer> greaterThanPredictive = new GreaterThanPredictive<>();
         greaterThanPredictive.setAttributive(parameters_id);
         greaterThanPredictive.setObject(3);
-        or.getPredicateObjs().add(greaterThanPredictive);
+        or.getChildPredicates().add(greaterThanPredictive);
 
         InPredictive<String> inPredictive = new InPredictive<>();
         inPredictive.setAttributive(parameters_name);
         inPredictive.setSubjects("latency", "count");
-        and.getPredicateObjs().add(inPredictive);
+        and.getChildPredicates().add(inPredictive);
 
 
 //
