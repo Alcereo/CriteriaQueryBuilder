@@ -2,9 +2,7 @@ package ru.alcereo.usability;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -30,14 +28,30 @@ public class AndPredicateObj implements Predicate_Obj {
     }
 
     @Override
-    public Predicate buildCriteriaPredicate(final CriteriaBuilder cb) {
+    public Predicate buildCriteriaPredicate(final CriteriaBuildData data) {
 
-        return cb.and((Predicate[]) predicateObjs
+        CriteriaBuilder cb = data.getCb();
+
+        return cb.and(predicateObjs
                 .stream()
-                .map(predicate_obj -> predicate_obj.buildCriteriaPredicate(cb))
-                .toArray()
+                .map(predicate_obj -> predicate_obj.buildCriteriaPredicate(data))
+                .toArray(Predicate[]::new)
         );
 
+    }
+
+    @Override
+    public Set<String> getLinks() {
+        return predicateObjs
+                .stream()
+                .map(predicate_obj -> predicate_obj.getLinks())
+                .reduce(
+                        new HashSet<>(),
+                        (linksSet1, linksSet2) -> {
+                                linksSet1.addAll(linksSet2);
+                                return linksSet1;
+                        }
+                );
     }
 
 }

@@ -4,8 +4,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by alcereo on 27.04.17.
@@ -37,6 +36,13 @@ public class InPredictive<TYPE> implements Predictive {
         return result;
     }
 
+    @Override
+    public Set<String> getLinks() {
+        Set<String> result = new HashSet<>();
+        result.add(attributive.getLink());
+
+        return result;
+    }
 
 
     public Attributive<?,TYPE> getAttributive() {
@@ -53,6 +59,11 @@ public class InPredictive<TYPE> implements Predictive {
 
     public void setSubjects(List<TYPE> subjects) {
         this.subjects = subjects;
+    }
+
+    public void setSubjects(TYPE... subjects) {
+        this.subjects = new ArrayList<>();
+        this.subjects.addAll(Arrays.asList(subjects));
     }
 
 }

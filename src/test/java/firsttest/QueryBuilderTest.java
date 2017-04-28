@@ -29,7 +29,7 @@ public class QueryBuilderTest {
         qBuilder.setFactory(factory);
     }
 
-    private static void initData() {
+    public static void initData(SessionFactory factory) {
         try (Session session = factory.openSession()) {
 
             ProcessorsVersionsEntity version;
@@ -194,8 +194,7 @@ public class QueryBuilderTest {
 
             session.flush();
 
-        }
-        ;
+        };
     }
 
     @Test
@@ -282,19 +281,6 @@ public class QueryBuilderTest {
                 builderList,
                 trueList
         );
-
-    }
-
-    @Test
-    public void selectDemoTest(){
-
-        qBuilder
-                .selectFrom(ProcessorsVersionsEntity.class)
-                .addWhiteLink(ParametersEntity.class,"com")
-                .addWhiteFilter((cb, links, root) -> links.get("com").get("id").in(1,2))
-                .addBlackFilter((cb, links, root) -> root.get("id").in(3))
-                .getResultList()
-                .forEach(System.out::println);
 
     }
 

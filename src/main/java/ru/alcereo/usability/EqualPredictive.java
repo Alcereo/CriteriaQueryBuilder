@@ -4,7 +4,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by alcereo on 28.04.17.
@@ -27,6 +27,14 @@ public class EqualPredictive<TYPE> implements Predictive {
         CriteriaBuilder cb = data.getCb();
 
         return cb.equal(attributive.getExpression(data), object);
+    }
+
+    @Override
+    public Set<String> getLinks() {
+        Set<String> result = new HashSet<>();
+        result.add(attributive.getLink());
+
+        return result;
     }
 
     public Attributive<?,TYPE> getAttributive() {

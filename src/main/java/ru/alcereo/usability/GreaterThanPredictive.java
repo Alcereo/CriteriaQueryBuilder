@@ -4,7 +4,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by alcereo on 28.04.17.
@@ -27,5 +27,29 @@ public  class  GreaterThanPredictive<TYPE extends Comparable<? super TYPE>> impl
         CriteriaBuilder cb = data.getCb();
 
         return cb.greaterThan(attributive.getExpression(data), object);
+    }
+
+    @Override
+    public Set<String> getLinks() {
+        Set<String> result = new HashSet<>();
+        result.add(attributive.getLink());
+
+        return result;
+    }
+
+    public Attributive<?, TYPE> getAttributive() {
+        return attributive;
+    }
+
+    public void setAttributive(Attributive<?, TYPE> attributive) {
+        this.attributive = attributive;
+    }
+
+    public TYPE getObject() {
+        return object;
+    }
+
+    public void setObject(TYPE object) {
+        this.object = object;
     }
 }
