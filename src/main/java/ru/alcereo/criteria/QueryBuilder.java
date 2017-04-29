@@ -7,13 +7,11 @@ import ru.alcereo.entities.CommandsEntity;
 import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
-import ru.alcereo.futils.Function2;
-import ru.alcereo.futils.Function3;
-import ru.alcereo.futils.Tuple2;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import ru.alcereo.futils.*;
 
 import javax.persistence.criteria.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -53,10 +51,6 @@ public class QueryBuilder {
         Predicate finalPredicate;
         Map<String, From> joins = new HashMap<>();
 
-        //
-
-
-        //
         List<PathPoint> path = getPathMap(startEntity, pathLinks);
 
         From lastJoin = root;
@@ -86,33 +80,36 @@ public class QueryBuilder {
 
     }
 
-    private <TYPE> List<PathPoint> getPathMap(Class<TYPE> startEntity, Map<PathView, String> pathLinks) {
+    private static <TYPE> List<PathPoint> getPathMap(Class<TYPE> startEntity, Map<PathView, String> pathLinks) {
 
         List<PathPoint> resultPathPoints = new ArrayList<>();
 
+        if (pathLinks.size()==0)
+            return resultPathPoints;
+
 //        Берем пути
-        List<Path> paths = getPaths();
+        List<Path> paths = getPaths(startEntity);
 
 //          Расчитываем пересечение вьюх и точек пути
 //         через спец класс
-        PathPointsViewsData pathPointsViewsData =
-                new PathPointsViewsData(pathLinks, paths)
+        PointViewsCrossExecutor executor =
+                new PointViewsCrossExecutor(pathLinks, paths)
                         .invoke();
 
-//        Пока проходим только по одному пути
-        if (pathPointsViewsData.getPathMaxDepths().keySet().size()>1)
+//        TODO: Сделать проход по дереву
+//          Пока проходим только по одному пути
+        if (executor.getPathMaxDepths().size()>1)
             throw new RuntimeException("Нашли больше одного пути!");
 
-//        Берем путь по которому будем идти
-        Path currentPath = pathPointsViewsData
-                .getPathMaxDepths()
-                .keySet().stream()
-                .findFirst().get();
+        Path currentPath = executor
+                    .getPathMaxDepths().keySet()
+                    .stream().findFirst().get();
 
 //        Берем из этого пути заготовленный массив PathPoint-ов
         PathPoint[] fullPathPoints = currentPath.newPathPoints();
+
 //        Берем из мапы максимальный индекс до которого нужно пройтись по этому пути
-        Integer maxIndex = pathPointsViewsData.getPathMaxDepths().get(currentPath);
+        Integer maxIndex = executor.getPathMaxDepths().get(currentPath);
 
 //        Заполняем наши точки до нужного индекса
         resultPathPoints
@@ -121,135 +118,52 @@ public class QueryBuilder {
                                 .subList(0, maxIndex)
                 );
 
-//        Берем инфу о линках
-        Map<String, Tuple2<Path, Integer>> pathViewPointIndexes =
-                pathPointsViewsData.getPointsLinksStringIndexes();
 
 //        Заполняем в наших поинтах инфу о линках
-        for (Map.Entry<String, Tuple2<Path, Integer>> pathViewPointEntity:
-                pathViewPointIndexes.entrySet()) {
-            Integer index = pathViewPointEntity.getValue().getValue2();
-            Path path = pathViewPointEntity.getValue().getValue1();
-            String pathViewLink = pathViewPointEntity.getKey();
-
-            resultPathPoints.get(index).setLinkName(pathViewLink);
-        }
+        executor.forEachLinkPoint(
+                (pathViewLink, path, index) ->
+                        resultPathPoints
+                                .get(index)
+                                .setLinkName(pathViewLink)
+        );
 
         return resultPathPoints;
-
-//      Заполнили таблицу нужных путей и их проходов
-//
-//
-//        //TODO: Пока говнокод для составления карты
-//        if (startEntity.equals(ProcessorsVersionsEntity.class)) {
-//            if (
-//                    pathLinks
-//                            .keySet()
-//                            .contains(
-//                                    PathView.from(ParametersEntity.class.getName())
-//                            )
-//                    ) {
-//
-//                //TODO: Задать определение пути
-//                resultPathPoints.add(
-//                        new PathPoint(
-//                                new PathPointData(
-//                                        "processorsUsed",
-//                                        ProcessorsEntity.class
-//                                ),
-//                                pathLinks.get(
-//                                        PathView.from(ProcessorsEntity.class)
-//                                )
-//                        )
-//                );
-//                resultPathPoints.add(
-//                        new PathPoint(
-//                                new PathPointData(
-//                                        "commands",
-//                                        CommandsEntity.class
-//                                ),
-//                                pathLinks.get(
-//                                        PathView.from(CommandsEntity.class)
-//                                )
-//                        )
-//                );
-//                resultPathPoints.add(
-//                        new PathPoint(
-//                                new PathPointData(
-//                                        "parameters",
-//                                        ParametersEntity.class
-//                                ),
-//                                pathLinks.get(
-//                                        PathView.from(ParametersEntity.class)
-//                                )
-//                        )
-//                );
-//
-//            } else if (pathLinks
-//                    .keySet()
-//                    .contains(
-//                            PathView.from(CommandsEntity.class)
-//                    )) {
-//                //TODO: Задать определение пути
-//                resultPathPoints.add(
-//                        new PathPoint(
-//                                new PathPointData(
-//                                        "processorsUsed",
-//                                        ProcessorsEntity.class
-//                                ),
-//                                pathLinks.get(
-//                                        PathView.from(ProcessorsEntity.class)
-//                                )
-//                        )
-//                );
-//                resultPathPoints.add(
-//                        new PathPoint(
-//                                new PathPointData(
-//                                        "commands",
-//                                        CommandsEntity.class
-//                                ),
-//                                pathLinks.get(
-//                                        PathView.from(CommandsEntity.class)
-//                                )
-//                        )
-//                );
-//            }
-//        }
-//
-//
-//        return resultPathPoints;
     }
 
-    private static List<Path> getPaths() {
+    private static <TYPE> List<Path> getPaths(Class<TYPE> entity) {
         List<Path> paths = new ArrayList<>();
 
-        Path path1 = new Path();
-        paths.add(path1);
-        ArrayList<PathPointData> pathPoints = new ArrayList<>();
-        path1.setPathPointDataList(pathPoints);
+        if (entity.equals(ProcessorsVersionsEntity.class)){
+            Path path1 = new Path();
+            paths.add(path1);
+            ArrayList<PathPointData> pathPoints = new ArrayList<>();
+            path1.setPathPointDataList(pathPoints);
+            path1.setPathName("P1");
 
-        pathPoints.add(
-                new PathPointData(
-                        "processorsUsed",
-                        ProcessorsEntity.class
-                )
-        );
+            pathPoints.add(
+                    new PathPointData(
+                            "processorsUsed",
+                            ProcessorsEntity.class
+                    )
+            );
 
-        pathPoints.add(
-                new PathPointData(
-                        "commands",
-                        CommandsEntity.class
-                )
-        );
+            pathPoints.add(
+                    new PathPointData(
+                            "commands",
+                            CommandsEntity.class
+                    )
+            );
 
-        pathPoints.add(
-                new PathPointData(
-                        "parameters",
-                        ParametersEntity.class
-                )
-        );
+            pathPoints.add(
+                    new PathPointData(
+                            "parameters",
+                            ParametersEntity.class
+                    )
+            );
 
-        path1.updatePathPoints();
+            path1.updatePathPoints();
+        }
+
         return paths;
     }
 
@@ -401,13 +315,27 @@ public class QueryBuilder {
 
     }
 
-    private static class PathPointsViewsData {
+    /**
+     * Класс для поиска PointView-ов в Path-ах
+     */
+    private static class PointViewsCrossExecutor {
+
         private Map<PathView, String> pathLinks;
         private List<Path> paths;
-        private Map<Path, Integer> pathMaxDepths;
-        private Map<String, Tuple2<Path, Integer>> pointsLinksStringIndexes;
 
-        public PathPointsViewsData(Map<PathView, String> pathLinks, List<Path> paths) {
+        /**
+         * Список пар - путь : максимальный индекс, по которому
+         * нужно по нему пройтись
+         */
+        private Map<Path, Integer> pathMaxDepths;
+
+        /**
+         * Список троек - Линк, путь, индекс.
+         * Содержит информацию в какой индекс пути установить линк.
+         */
+        private List<Tuple3<String, Path, Integer>> pointsLinksStringIndexes;
+
+        public PointViewsCrossExecutor(Map<PathView, String> pathLinks, List<Path> paths) {
             this.pathLinks = pathLinks;
             this.paths = paths;
         }
@@ -416,13 +344,13 @@ public class QueryBuilder {
             return pathMaxDepths;
         }
 
-        public Map<String, Tuple2<Path, Integer>> getPointsLinksStringIndexes() {
+        public List<Tuple3<String,Path, Integer>> getPointsLinksStringIndexes() {
             return pointsLinksStringIndexes;
         }
 
-        public PathPointsViewsData invoke() {
+        public PointViewsCrossExecutor invoke() {
             pathMaxDepths = new HashMap<>();
-            pointsLinksStringIndexes = new HashMap<>();
+            pointsLinksStringIndexes = new ArrayList<>();
 
             for (Map.Entry<PathView, String> entry: pathLinks.entrySet()) {
                 boolean found = false;
@@ -443,14 +371,14 @@ public class QueryBuilder {
                         pathMaxDepths.put(
                                 path,
                                 Math.max(
-                                        depth+1,
+                                        depth + 1,
                                         currentDepth)
                         );
 
 //                        Собираем информацию о индексах линков
-                        pointsLinksStringIndexes.put(
-                                pathLinkName,
-                                new Tuple2<>(
+                        pointsLinksStringIndexes.add(
+                                Tuple3.from(
+                                        pathLinkName,
                                         path,
                                         depth
                                 )
@@ -470,5 +398,16 @@ public class QueryBuilder {
             }
             return this;
         }
+
+        public void forEachLinkPoint(Consumer3<String, Path, Integer> cons){
+            pointsLinksStringIndexes.forEach(
+                    stringPathIntegerTuple3 -> cons.accept(
+                            stringPathIntegerTuple3.getValue1(),
+                            stringPathIntegerTuple3.getValue2(),
+                            stringPathIntegerTuple3.getValue3()
+                    )
+            );
+        }
+
     }
 }

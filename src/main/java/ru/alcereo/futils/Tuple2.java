@@ -13,6 +13,10 @@ public class Tuple2<TYPE1, TYPE2> {
         this.value2 = value2;
     }
 
+    public static<TYPE1, TYPE2> Tuple2<TYPE1, TYPE2> from(TYPE1 value1, TYPE2 value2){
+        return new Tuple2<>(value1, value2);
+    }
+
     public TYPE1 getValue1() {
         return value1;
     }

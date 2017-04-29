@@ -7,6 +7,10 @@ class PathView {
 
     private Class classView;
     private final String stringView;
+
+    /**
+     * Указание на конкретный Path
+     */
     private String pathName;
 
     public PathView(Class classView) {
@@ -20,6 +24,7 @@ class PathView {
 
     public PathView(String stringView, String pathName) {
         this.stringView = stringView;
+        this.pathName = pathName;
     }
 
 
@@ -50,7 +55,13 @@ class PathView {
         return stringView;
     }
 
+    public String getPathName() {
+        return pathName;
+    }
 
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
+    }
 
     @Override
     public boolean equals(Object o) {

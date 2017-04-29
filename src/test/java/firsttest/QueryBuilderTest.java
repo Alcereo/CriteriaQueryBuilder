@@ -23,7 +23,7 @@ public class QueryBuilderTest {
     public static void initDB() {
         factory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
 
-//        initData();
+//        initData(factory);
 
         qBuilder = new QueryBuilder();
         qBuilder.setFactory(factory);

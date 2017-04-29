@@ -15,6 +15,10 @@ public class Tuple3<TYPE1, TYPE2, TYPE3> {
         this.value3 = value3;
     }
 
+    public static <TYPE1, TYPE2, TYPE3> Tuple3<TYPE1, TYPE2, TYPE3> from(TYPE1 value1, TYPE2 value2, TYPE3 value3){
+        return new Tuple3<>(value1, value2, value3);
+    }
+
     public TYPE1 getValue1() {
         return value1;
     }
