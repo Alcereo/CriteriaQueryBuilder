@@ -5,33 +5,33 @@ package ru.alcereo.criteria;
  */
 class PathPoint {
 
-    private boolean simpleJoin;
-    private String propertyName;
+    /**
+     * Данные о точке пути
+     */
+    private PathPointData pathPointData;
+
+    /**
+     * Имя ссылки, которую задачи, чтобы использовать этот поинт
+     * через набор линков
+     * ЗЫ Сейчас - заполняется при
+     */
     private String linkName;
 
-    public PathPoint(boolean simpleJoin, String propertyName, String linkName) {
-        this.simpleJoin = simpleJoin;
-        this.propertyName = propertyName;
+
+    public PathPoint(PathPointData pathPointData, String linkName) {
+        this.pathPointData = pathPointData;
         this.linkName = linkName;
     }
 
     public PathPoint() {
     }
 
-    public boolean isSimpleJoin() {
-        return simpleJoin;
+    public PathPointData getPathPointData() {
+        return pathPointData;
     }
 
-    public void setSimpleJoin(boolean simpleJoin) {
-        this.simpleJoin = simpleJoin;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
+    public void setPathPointData(PathPointData pathPointData) {
+        this.pathPointData = pathPointData;
     }
 
     public String getLinkName() {

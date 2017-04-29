@@ -178,13 +178,13 @@ public class ObjectPredicateObjTest {
                         ).and(Parameters_.name().equal("Alcereo")
                 );
 
-//
+//      -----
 
         System.out.println("!!!+");
         mainPredicate.getLinks().forEach(System.out::println);
         System.out.println("!!!-");
 
-        //
+//      -----
 
         qBuilder
                 .selectFrom(ProcessorsVersionsEntity.class)

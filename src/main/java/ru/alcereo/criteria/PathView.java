@@ -6,22 +6,40 @@ package ru.alcereo.criteria;
 class PathView {
 
     private Class classView;
-    private String stringView;
+    private final String stringView;
+    private String pathName;
 
     public PathView(Class classView) {
         this.classView = classView;
+        this.stringView = classView.getName();
     }
 
     public PathView(String stringView) {
         this.stringView = stringView;
     }
 
-    public boolean itClassView() {
-        return classView != null;
+    public PathView(String stringView, String pathName) {
+        this.stringView = stringView;
     }
 
-    static PathView from(Class classView) {
+
+
+    public static PathView from(Class classView) {
         return new PathView(classView);
+    }
+
+    public static PathView from(String className) {
+        return new PathView(className);
+    }
+
+    public static PathView from(String className, String pathName) {
+        return new PathView(className, pathName);
+    }
+
+
+
+    public boolean itClassView() {
+        return classView != null;
     }
 
     public Class getClassView() {
@@ -32,6 +50,8 @@ class PathView {
         return stringView;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,14 +59,23 @@ class PathView {
 
         PathView pathView = (PathView) o;
 
-        if (classView != null ? !classView.equals(pathView.classView) : pathView.classView != null) return false;
-        return stringView != null ? stringView.equals(pathView.stringView) : pathView.stringView == null;
+        if (!stringView.equals(pathView.stringView)) return false;
+        return pathName != null ? pathName.equals(pathView.pathName) : pathView.pathName == null;
     }
 
     @Override
     public int hashCode() {
-        int result = classView != null ? classView.hashCode() : 0;
-        result = 31 * result + (stringView != null ? stringView.hashCode() : 0);
+        int result = stringView.hashCode();
+        result = 31 * result + (pathName != null ? pathName.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PathView{" +
+                "classView=" + classView +
+                ", stringView='" + stringView + '\'' +
+                ", pathName='" + pathName + '\'' +
+                '}';
     }
 }
