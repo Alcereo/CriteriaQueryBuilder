@@ -3,7 +3,7 @@ package ru.alcereo.criteria;
 /**
  * Created by alcereo on 23.04.17.
  */
-class PathView {
+public class PathView {
 
     private Class classView;
     private final String stringView;

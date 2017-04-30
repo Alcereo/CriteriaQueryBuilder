@@ -12,6 +12,11 @@ public class Attributive<PARENT_TYPE, SELF_TYPE> {
     private Attributive<?,PARENT_TYPE> parent;
     private SingularAttribute<PARENT_TYPE, SELF_TYPE> attribute;
 
+    /**
+     * Строковая ссылка, которая будет использована при указании на Join
+     * Необходима только для аттрибутивов - таблиц
+     * ЗЫ для таблиц с указанием пути будет конкатенирована с именем пути
+     */
     private String viewName;
 
     public Path<SELF_TYPE> getExpression(final CriteriaBuildData data){
@@ -97,4 +102,5 @@ public class Attributive<PARENT_TYPE, SELF_TYPE> {
     public void setViewName(String viewName) {
         this.viewName = viewName;
     }
+
 }

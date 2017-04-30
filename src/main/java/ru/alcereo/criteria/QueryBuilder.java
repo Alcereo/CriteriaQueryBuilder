@@ -195,18 +195,18 @@ public class QueryBuilder {
             this.startEntity = startEntity;
         }
 
-        public QueryData<TYPE> addWhiteLink(Class entity, String name) {
+        public QueryData<TYPE> addWhiteLink(Class entity, String stringLink) {
             pathWhiteLinks.put(
                     new PathView(entity),
-                    name
+                    stringLink
             );
             return this;
         }
 
-        public QueryData<TYPE> addWhiteLink(PathView pathView, String name) {
+        public QueryData<TYPE> addWhiteLink(PathView pathView, String stringLink) {
             pathWhiteLinks.put(
                     pathView,
-                    name
+                    stringLink
             );
             return this;
         }
@@ -226,6 +226,14 @@ public class QueryBuilder {
             pathBlackLinks.put(
                     new PathView(entity),
                     name
+            );
+            return this;
+        }
+
+        public QueryData<TYPE> addBlackLink(PathView pathView, String stringLink) {
+            pathBlackLinks.put(
+                    pathView,
+                    stringLink
             );
             return this;
         }
