@@ -16,7 +16,7 @@ import javax.persistence.metamodel.*;
 /**
  * Created by alcereo on 27.04.17.
  */
-public class ObjectPredicateObjTest {
+public class UsabilityTests {
 
     private static SessionFactory factory;
     private static QueryBuilder qBuilder;
