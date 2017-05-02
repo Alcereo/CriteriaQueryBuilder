@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import ru.alcereo.usability.CriteriaBuildData;
+import ru.alcereo.usability.UsabilityConfiguration;
 import ru.alcereo.usability.predicates.AndUPredicate;
+import ru.alcereo.usability.predicates.EqualPredictive;
 import ru.alcereo.usability.predicates.OrUPredicate;
 import ru.alcereo.usability.predicates.UPredicate;
 
@@ -37,9 +39,6 @@ public class UPredicateDesiarialize extends StdDeserializer<UPredicate>{
         super(src);
     }
 
-    private static final String AND = "and";
-    private static final String OR = "or";
-
     @Override
     public UPredicate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 
@@ -56,13 +55,15 @@ public class UPredicateDesiarialize extends StdDeserializer<UPredicate>{
 
         String predicateField = treeNode.fieldNames().next();
 
-        Map<String, Class<? extends UPredicate>> deserializators = new HashMap<>();
-        deserializators.put(AND, AndUPredicate.class);
-        deserializators.put(OR, OrUPredicate.class);
+//        TODO: Возможно стоит автоматизировать
+        Map<String, Class<? extends UPredicate>> deserializators =
+                UsabilityConfiguration.getPredicatesDeserializationMap();
 
-
-        Optional<Map.Entry<String, Class<? extends UPredicate>>> deserializator = deserializators.entrySet()
-                .stream().filter(predicateField::equals).findFirst();
+        Optional<Map.Entry<String, Class<? extends UPredicate>>> deserializator =
+                deserializators
+                        .entrySet().stream()
+                        .filter(stringClassEntry -> stringClassEntry.getKey().equals(predicateField))
+                        .findFirst();
 
         if (!deserializator.isPresent())
             throw ctxt.weirdKeyException(String.class,predicateField,"Predicate: \""+predicateField+"\" not implemented");

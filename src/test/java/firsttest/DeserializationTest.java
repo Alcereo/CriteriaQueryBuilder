@@ -1,18 +1,20 @@
 package firsttest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Predicate;
 import org.junit.Test;
-import ru.alcereo.usability.predicates.EqualPredictive;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ConfigurationBuilder;
+import ru.alcereo.usability.annotations.UMetaClass;
+import ru.alcereo.usability.annotations.UPredicateView;
 import ru.alcereo.usability.predicates.UPredicate;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
-import java.util.Scanner;
+
+import static org.reflections.ReflectionUtils.*;
 
 /**
  * Created by alcereo on 02.05.17.

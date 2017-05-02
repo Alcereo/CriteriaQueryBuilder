@@ -1,7 +1,14 @@
 {
   "and": [
     {
-      "or": []
+      "or": [
+        {
+          "equal":{
+            "subject": 3,
+            "attribute": ""
+          }
+        }
+      ]
     },
     {
       "and":[]

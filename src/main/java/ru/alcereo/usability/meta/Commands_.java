@@ -2,6 +2,7 @@ package ru.alcereo.usability.meta;
 
 import org.hibernate.SessionFactory;
 import ru.alcereo.entities.CommandsEntity;
+import ru.alcereo.usability.annotations.UMetaClass;
 import ru.alcereo.usability.predicates.Attributive;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -9,6 +10,7 @@ import javax.persistence.metamodel.SingularAttribute;
 /**
  * Created by alcereo on 28.04.17.
  */
+@UMetaClass("Commands")
 public class Commands_ {
 
     private static volatile SingularAttribute<CommandsEntity, Integer> id;

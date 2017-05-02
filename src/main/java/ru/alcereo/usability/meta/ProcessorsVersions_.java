@@ -3,6 +3,7 @@ package ru.alcereo.usability.meta;
 import org.hibernate.SessionFactory;
 import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
+import ru.alcereo.usability.annotations.UMetaClass;
 import ru.alcereo.usability.predicates.Attributive;
 import ru.alcereo.usability.USelect;
 
@@ -11,6 +12,7 @@ import javax.persistence.metamodel.SingularAttribute;
 /**
  * Created by alcereo on 30.04.17.
  */
+@UMetaClass("ProcessorsVersions")
 public class ProcessorsVersions_ {
 
     private static volatile SingularAttribute<ProcessorsVersionsEntity, Integer> idSingularAttribute;
