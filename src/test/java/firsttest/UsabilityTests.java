@@ -10,6 +10,7 @@ import ru.alcereo.usability.*;
 import ru.alcereo.usability.meta.Commands_;
 import ru.alcereo.usability.meta.Parameters_;
 import ru.alcereo.usability.meta.ProcessorsVersions_;
+import ru.alcereo.usability.predicates.*;
 
 import javax.persistence.metamodel.*;
 

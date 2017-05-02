@@ -1,9 +1,9 @@
-package ru.alcereo.usability;
+package ru.alcereo.usability.predicates;
+
+import ru.alcereo.usability.CriteriaBuildData;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.*;
 
 /**

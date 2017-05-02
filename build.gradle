@@ -31,4 +31,6 @@ dependencies {
 
     compile group: 'org.springframework', name: 'spring-context', version: '5.0.0.M5'
 
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8'
+
 }

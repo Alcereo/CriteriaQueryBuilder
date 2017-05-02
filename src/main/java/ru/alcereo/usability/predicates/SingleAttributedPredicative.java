@@ -1,4 +1,4 @@
-package ru.alcereo.usability;
+package ru.alcereo.usability.predicates;
 
 import java.util.HashSet;
 import java.util.Set;
