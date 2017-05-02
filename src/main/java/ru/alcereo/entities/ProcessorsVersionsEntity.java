@@ -1,5 +1,7 @@
 package ru.alcereo.entities;
 
+import org.hibernate.annotations.Filter;
+
 import javax.persistence.*;
 import java.util.Set;
 

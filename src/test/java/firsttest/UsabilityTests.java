@@ -182,7 +182,7 @@ public class UsabilityTests {
 //                TODO: qBuilder - будет инжектиться
                 .select(qBuilder)
                 .where(
-                        Parameters_.id().in(1,2)
+                        Commands_.id().in(1,2)
                         .or(
                                 Commands_.name().in("admin", "some other")
                         )

@@ -2,7 +2,6 @@ package ru.alcereo.usability.meta;
 
 import org.hibernate.SessionFactory;
 import ru.alcereo.criteria.QueryBuilder;
-import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
 import ru.alcereo.usability.Attributive;
 import ru.alcereo.usability.USelect;
@@ -14,17 +13,17 @@ import javax.persistence.metamodel.SingularAttribute;
  */
 public class ProcessorsVersions_ {
 
-    private static volatile SingularAttribute<ProcessorsVersionsEntity, Integer> id;
-    private static volatile SingularAttribute<ProcessorsVersionsEntity, String> name;
+    private static volatile SingularAttribute<ProcessorsVersionsEntity, Integer> idSingularAttribute;
+    private static volatile SingularAttribute<ProcessorsVersionsEntity, String> nameSingularAttribute;
 
     static {
         SessionFactory factory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
-        id = (SingularAttribute<ProcessorsVersionsEntity, Integer>)
+        idSingularAttribute = (SingularAttribute<ProcessorsVersionsEntity, Integer>)
                 factory.getMetamodel()
                         .entity(ProcessorsVersionsEntity.class)
                         .getSingularAttribute("id", Integer.class);
 
-        name = (SingularAttribute<ProcessorsVersionsEntity, String>)
+        nameSingularAttribute = (SingularAttribute<ProcessorsVersionsEntity, String>)
                 factory.getMetamodel()
                         .entity(ProcessorsVersionsEntity.class)
                         .getSingularAttribute("name", String.class);
@@ -42,7 +41,7 @@ public class ProcessorsVersions_ {
         Attributive<ProcessorsVersionsEntity, Integer> result = new Attributive<>();
 
         result.setParent(table());
-        result.setAttribute(id);
+        result.setAttribute(idSingularAttribute);
 
         return result;
     }
@@ -51,7 +50,7 @@ public class ProcessorsVersions_ {
         Attributive<ProcessorsVersionsEntity, String> result = new Attributive<>();
 
         result.setParent(table());
-        result.setAttribute(name);
+        result.setAttribute(nameSingularAttribute);
 
         return result;
     }
