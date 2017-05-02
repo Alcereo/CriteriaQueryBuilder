@@ -1,4 +1,6 @@
-package ru.alcereo.usability;
+package ru.alcereo.usability.predicates;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.*;
 

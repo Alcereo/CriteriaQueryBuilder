@@ -1,34 +1,37 @@
-package ru.alcereo.usability;
+package ru.alcereo.usability.predicates;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import ru.alcereo.usability.CriteriaBuildData;
+import ru.alcereo.usability.deserializers.OrUPredicateDEserializer;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by alcereo on 27.04.17.
  */
-public class AndUPredicate extends CompoundUPredicate{
+@JsonDeserialize(using = OrUPredicateDEserializer.class)
+public class OrUPredicate extends CompoundUPredicate {
 
-    public AndUPredicate(List<UPredicate> childPredicates) {
+    public OrUPredicate(List<UPredicate> childPredicates) {
         super(childPredicates);
     }
 
-    public AndUPredicate(UPredicate... childPredicates) {
+    public OrUPredicate(UPredicate... childPredicates) {
         super(childPredicates);
     }
 
     @Override
     public Predicate buildCriteriaPredicate(final CriteriaBuildData data) {
-
         CriteriaBuilder cb = data.getCb();
 
-        return cb.and(getChildPredicates()
+        return cb.or(getChildPredicates()
                 .stream()
                 .map(predicate_obj -> predicate_obj.buildCriteriaPredicate(data))
                 .toArray(Predicate[]::new)
         );
 
     }
-
 
 }

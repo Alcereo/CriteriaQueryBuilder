@@ -1,8 +1,9 @@
-package ru.alcereo.usability;
+package ru.alcereo.usability.predicates;
+
+import ru.alcereo.usability.CriteriaBuildData;
 
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.SingularAttribute;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

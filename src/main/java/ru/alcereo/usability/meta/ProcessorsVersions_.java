@@ -3,7 +3,7 @@ package ru.alcereo.usability.meta;
 import org.hibernate.SessionFactory;
 import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
-import ru.alcereo.usability.Attributive;
+import ru.alcereo.usability.predicates.Attributive;
 import ru.alcereo.usability.USelect;
 
 import javax.persistence.metamodel.SingularAttribute;

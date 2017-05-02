@@ -2,7 +2,7 @@ package ru.alcereo.usability.meta;
 
 import org.hibernate.SessionFactory;
 import ru.alcereo.entities.ParametersEntity;
-import ru.alcereo.usability.Attributive;
+import ru.alcereo.usability.predicates.Attributive;
 
 import javax.persistence.metamodel.*;
 

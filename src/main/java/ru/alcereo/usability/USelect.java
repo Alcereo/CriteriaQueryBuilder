@@ -2,11 +2,11 @@ package ru.alcereo.usability;
 
 import ru.alcereo.criteria.PathView;
 import ru.alcereo.criteria.QueryBuilder;
+import ru.alcereo.usability.predicates.UPredicate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by alcereo on 30.04.17.
