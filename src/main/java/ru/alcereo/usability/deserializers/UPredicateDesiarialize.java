@@ -45,34 +45,30 @@ public class UPredicateDesiarialize extends StdDeserializer<UPredicate>{
         TreeNode treeNode = p.getCodec().readTree(p);
 
         if (!treeNode.isObject() || treeNode.size()>1){
-            throw ctxt.mappingException("Predicate must start with single compound predicate key");
+            throw ctxt.mappingException("Predicate must start with first single predicate key");
         }
 
         if (treeNode.size()==0)
             return null;
 
-        UPredicate result = null;
+        String predicateString = treeNode.fieldNames().next();
 
-        String predicateField = treeNode.fieldNames().next();
-
-//        TODO: Возможно стоит автоматизировать
         Map<String, Class<? extends UPredicate>> deserializators =
                 UsabilityConfiguration.getPredicatesDeserializationMap();
 
         Optional<Map.Entry<String, Class<? extends UPredicate>>> deserializator =
                 deserializators
                         .entrySet().stream()
-                        .filter(stringClassEntry -> stringClassEntry.getKey().equals(predicateField))
+                        .filter(stringClassEntry -> stringClassEntry.getKey().equals(predicateString))
                         .findFirst();
 
         if (!deserializator.isPresent())
-            throw ctxt.weirdKeyException(String.class,predicateField,"Predicate: \""+predicateField+"\" not implemented");
+            throw ctxt.weirdKeyException(String.class,predicateString,"Predicate: \""+predicateString+"\" not implemented");
 
-        result = treeNode
-                .get(predicateField)
+        return treeNode
+                .get(predicateString)
                 .traverse(p.getCodec())
                 .readValueAs(deserializator.get().getValue());
 
-        return result;
     }
 }

@@ -2,10 +2,18 @@
   "and": [
     {
       "or": [
-        {
-          "equal":{
-            "subject": 3,
-            "attribute": ""
+        {"equal":{
+            "attribute": {
+              "view":"Commands.id"
+            },
+            "object": 3
+          }
+        },
+        {"equal":{
+            "attribute": {
+              "view":"Commands.name"
+            },
+            "object": "some name"
           }
         }
       ]

@@ -30,6 +30,8 @@ public class DeserializationTest {
 
         System.out.println(""+predicate);
 
+        new ObjectMapper().readValue(new File(FILE1), UPredicate.class);
+
     }
 
 }

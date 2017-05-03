@@ -1,13 +1,15 @@
 package ru.alcereo.usability.predicates;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.alcereo.usability.CriteriaBuildData;
+import ru.alcereo.usability.deserializers.AttributiveDeserializer;
 
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 import java.util.Map;
 
-
+@JsonDeserialize(using = AttributiveDeserializer.class)
 public class Attributive<PARENT_TYPE, SELF_TYPE> {
 
     private Attributive<?,PARENT_TYPE> parent;

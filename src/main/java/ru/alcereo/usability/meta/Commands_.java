@@ -3,6 +3,7 @@ package ru.alcereo.usability.meta;
 import org.hibernate.SessionFactory;
 import ru.alcereo.entities.CommandsEntity;
 import ru.alcereo.usability.annotations.UMetaClass;
+import ru.alcereo.usability.annotations.UMetaMethod;
 import ru.alcereo.usability.predicates.Attributive;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -13,47 +14,53 @@ import javax.persistence.metamodel.SingularAttribute;
 @UMetaClass("Commands")
 public class Commands_ {
 
-    private static volatile SingularAttribute<CommandsEntity, Integer> id;
-    private static volatile SingularAttribute<CommandsEntity, String> name;
+    public static final Attributive<?, CommandsEntity> table;
 
     static {
+        table = new Attributive<>();
+        table.setViewName(CommandsEntity.class.getName());
+    }
+
+    public static final Attributive<CommandsEntity,Integer> id;
+    public static final Attributive<CommandsEntity, String> name;
+
+    static {
+
         SessionFactory factory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
-        id = (SingularAttribute<CommandsEntity, Integer>)
+        SingularAttribute<CommandsEntity, Integer> idAttribute = (SingularAttribute<CommandsEntity, Integer>)
                 factory.getMetamodel()
                         .entity(CommandsEntity.class)
                         .getSingularAttribute("id", Integer.class);
 
-        name = (SingularAttribute<CommandsEntity, String>)
+        id = new Attributive<>();
+        id.setParent(table);
+        id.setAttribute(idAttribute);
+
+
+        SingularAttribute<CommandsEntity, String> nameAttribute = (SingularAttribute<CommandsEntity, String>)
                 factory.getMetamodel()
                         .entity(CommandsEntity.class)
                         .getSingularAttribute("name", String.class);
+
+        name = new Attributive<>();
+        name.setParent(table);
+        name.setAttribute(nameAttribute);
     }
 
 
-    static Attributive<?,CommandsEntity> table(){
-        Attributive<?, CommandsEntity> result = new Attributive<>();
-        result.setViewName(CommandsEntity.class.getName());
-
-        return result;
+    @UMetaMethod
+    public static Attributive<?,CommandsEntity> table(){
+        return table;
     }
 
+    @UMetaMethod
     public static Attributive<CommandsEntity,Integer> id(){
-        Attributive<CommandsEntity, Integer> result = new Attributive<>();
-
-        result.setParent(table());
-        result.setAttribute(id);
-
-        return result;
+        return id;
     }
 
+    @UMetaMethod
     public static Attributive<CommandsEntity, String> name(){
-        Attributive<CommandsEntity, String> result = new Attributive<>();
-
-        result.setParent(table());
-        result.setAttribute(name);
-
-        return result;
+        return name;
     }
-
 
 }
