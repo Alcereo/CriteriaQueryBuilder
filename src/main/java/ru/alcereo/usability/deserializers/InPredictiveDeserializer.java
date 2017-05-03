@@ -4,28 +4,28 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import ru.alcereo.usability.predicates.Attributive;
-import ru.alcereo.usability.predicates.EqualPredictive;
+import ru.alcereo.usability.predicates.InPredictive;
 
 import java.io.IOException;
 
 /**
- * Created by alcereo on 02.05.17.
+ * Created by alcereo on 03.05.17.
  */
-public class EqualPredictiveDeserializer extends StdDeserializer<EqualPredictive>{
+public class InPredictiveDeserializer extends StdDeserializer<InPredictive> {
 
-    public EqualPredictiveDeserializer() {
-        super(EqualPredictive.class);
+    public InPredictiveDeserializer() {
+        super(InPredictive.class);
     }
 
     @Override
-    public EqualPredictive deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-
+    public InPredictive deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         TreeNode treeNode = p.getCodec().readTree(p);
 
         if (!treeNode.isObject())
-            throw ctxt.mappingException("\"Equal\" predictive must be an object");
+            throw ctxt.mappingException("\"in\" predictive must be an object");
 
         TreeNode objectNode = treeNode.get("object");
         TreeNode attributiveNode = treeNode.get("attribute");
@@ -37,8 +37,8 @@ public class EqualPredictiveDeserializer extends StdDeserializer<EqualPredictive
             throw ctxt.mappingException("Field \"attributive\" not found");
 
         //TODO: Создание объекта должно быть единообразным
-        EqualPredictive result = new EqualPredictive();
-        result.setSubject(
+        InPredictive result = new InPredictive();
+        result.setSubjects(
                 objectNode.traverse(p.getCodec()).readValueAs(Object.class)
         );
 
@@ -47,5 +47,6 @@ public class EqualPredictiveDeserializer extends StdDeserializer<EqualPredictive
         );
 
         return result;
+
     }
 }

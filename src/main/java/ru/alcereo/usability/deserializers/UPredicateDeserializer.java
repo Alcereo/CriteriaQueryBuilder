@@ -21,21 +21,21 @@ import java.util.*;
 /**
  * Created by alcereo on 02.05.17.
  */
-public class UPredicateDesiarialize extends StdDeserializer<UPredicate>{
+public class UPredicateDeserializer extends StdDeserializer<UPredicate>{
 
-    public UPredicateDesiarialize() {
+    public UPredicateDeserializer() {
         super(UPredicate.class);
     }
 
-    public UPredicateDesiarialize(Class<?> vc) {
+    public UPredicateDeserializer(Class<?> vc) {
         super(vc);
     }
 
-    public UPredicateDesiarialize(JavaType valueType) {
+    public UPredicateDeserializer(JavaType valueType) {
         super(valueType);
     }
 
-    public UPredicateDesiarialize(StdDeserializer<?> src) {
+    public UPredicateDeserializer(StdDeserializer<?> src) {
         super(src);
     }
 

@@ -4,22 +4,29 @@
       "or": [
         {"equal":{
             "attribute": {
-              "view":"Commands.id"
+              "table":"Commands",
+              "property":"id"
             },
             "object": 3
           }
         },
         {"equal":{
             "attribute": {
-              "view":"Commands.name"
+              "table":"Commands",
+              "property":"name"
             },
             "object": "some name"
           }
         }
       ]
     },
-    {
-      "and":[]
+    {"in":{
+      "attribute": {
+        "table":"Commands",
+        "property":"id"
+      },
+      "object": [1,2,3]
+    }
     }
   ]
 }

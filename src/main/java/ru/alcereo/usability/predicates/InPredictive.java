@@ -1,6 +1,9 @@
 package ru.alcereo.usability.predicates;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.alcereo.usability.CriteriaBuildData;
+import ru.alcereo.usability.annotations.UPredicateView;
+import ru.alcereo.usability.deserializers.InPredictiveDeserializer;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
@@ -9,6 +12,8 @@ import java.util.*;
 /**
  * Created by alcereo on 27.04.17.
  */
+@JsonDeserialize(using = InPredictiveDeserializer.class)
+@UPredicateView("in")
 public class InPredictive<TYPE> extends SingleAttributedPredicative<TYPE> {
 
     private List<TYPE> subjects;

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.TextNode;
+import org.hibernate.mapping.Map;
 import ru.alcereo.usability.UsabilityConfiguration;
 import ru.alcereo.usability.predicates.Attributive;
 
@@ -29,16 +30,19 @@ public class AttributiveDeserializer extends StdDeserializer<Attributive> {
         if(!treeNode.isObject())
             throw ctxt.mappingException("\"attributive\" must be an object");
 
-        TreeNode viewNode = treeNode.get("view");
+        TreeNode tableNode = treeNode.get("table");
+        TreeNode propertyNode = treeNode.get("property");
 
-        String viewString = ((TextNode) viewNode).textValue();
+        if (tableNode==null)
+            throw ctxt.mappingException("Attributive must have \"table\" property");
 
-        String[] split = viewString.split("\\.");
+        if (propertyNode==null)
+            throw ctxt.mappingException("Attributive must have \"property\" property");
 
-        if (split.length!=2)
-            throw ctxt.weirdStringException(viewString, String.class, "\"View\" mast have mask: <table>.<property>");
+        String tableString =    tableNode   .traverse(p.getCodec()).readValueAs(String.class);
+        String propertyString = propertyNode.traverse(p.getCodec()).readValueAs(String.class);
 
-        Attributive attributiveOnView = UsabilityConfiguration.getAttributiveOnView(split[0], split[1]);
+        Attributive attributiveOnView = UsabilityConfiguration.getAttributiveOnView(tableString, propertyString);
 
         return attributiveOnView;
     }
