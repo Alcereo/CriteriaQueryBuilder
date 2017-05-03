@@ -2,15 +2,17 @@
   "and": [
     {
       "or": [
-        {"equal":{
+        {
+          "gt": {
             "attribute": {
-              "table":"Commands",
-              "property":"id"
+              "table": "Parameters",
+              "property": "id"
             },
-            "object": 3
+            "object": 1
           }
         },
-        {"equal":{
+        {
+          "equal":{
             "attribute": {
               "table":"Commands",
               "property":"name"
@@ -20,7 +22,8 @@
         }
       ]
     },
-    {"in":{
+    {
+      "in":{
       "attribute": {
         "table":"Commands",
         "property":"id"

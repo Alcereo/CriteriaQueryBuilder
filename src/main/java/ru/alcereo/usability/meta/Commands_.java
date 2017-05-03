@@ -1,52 +1,27 @@
 package ru.alcereo.usability.meta;
 
-import org.hibernate.SessionFactory;
+import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.CommandsEntity;
+import ru.alcereo.entities.ParametersEntity;
+import ru.alcereo.usability.USelect;
 import ru.alcereo.usability.annotations.UMetaClass;
 import ru.alcereo.usability.annotations.UMetaMethod;
 import ru.alcereo.usability.predicates.Attributive;
-
-import javax.persistence.metamodel.SingularAttribute;
 
 /**
  * Created by alcereo on 28.04.17.
  */
 @UMetaClass("Commands")
-public class Commands_ {
+public class Commands_  extends UBaseMetaClass{
 
-    public static final Attributive<?, CommandsEntity> table;
+    public static final Attributive<?, CommandsEntity> table =
+            new Attributive<>(CommandsEntity.class.getName());
 
-    static {
-        table = new Attributive<>();
-        table.setViewName(CommandsEntity.class.getName());
-    }
+    public static final Attributive<CommandsEntity,Integer> id =
+            new Attributive<>(table,"id");
 
-    public static final Attributive<CommandsEntity,Integer> id;
-    public static final Attributive<CommandsEntity, String> name;
-
-    static {
-
-        SessionFactory factory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
-        SingularAttribute<CommandsEntity, Integer> idAttribute = (SingularAttribute<CommandsEntity, Integer>)
-                factory.getMetamodel()
-                        .entity(CommandsEntity.class)
-                        .getSingularAttribute("id", Integer.class);
-
-        id = new Attributive<>();
-        id.setParent(table);
-        id.setAttribute(idAttribute);
-
-
-        SingularAttribute<CommandsEntity, String> nameAttribute = (SingularAttribute<CommandsEntity, String>)
-                factory.getMetamodel()
-                        .entity(CommandsEntity.class)
-                        .getSingularAttribute("name", String.class);
-
-        name = new Attributive<>();
-        name.setParent(table);
-        name.setAttribute(nameAttribute);
-    }
-
+    public static final Attributive<CommandsEntity, String> name =
+            new Attributive<>(table,"name");
 
     @UMetaMethod
     public static Attributive<?,CommandsEntity> table(){
@@ -61,6 +36,14 @@ public class Commands_ {
     @UMetaMethod
     public static Attributive<CommandsEntity, String> name(){
         return name;
+    }
+
+    /**
+     * Этого метода быть не должно.
+     * Билдер в идеале должен инжектиться.
+     */
+    public static USelect<ParametersEntity> select(QueryBuilder queryBuilder){
+        return baseSelect(queryBuilder, ParametersEntity.class);
     }
 
 }

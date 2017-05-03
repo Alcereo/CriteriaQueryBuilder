@@ -35,7 +35,12 @@ public class AndUPredicateDeserializer extends StdDeserializer<AndUPredicate> {
         result.setChildPredicates(predicates);
 
         for (int i = 0; i < treeNode.size(); i++) {
-            predicates.add(treeNode.get(i).traverse(p.getCodec()).readValueAs(UPredicate.class));
+            predicates.add(
+                    treeNode
+                            .get(i)
+                            .traverse(p.getCodec())
+                            .readValueAs(UPredicate.class)
+            );
         }
 
         return result;

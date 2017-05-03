@@ -1017,7 +1017,7 @@ public class SelectProcessorsVersionsTest {
 //                        cb.literal(0)
 //                )
 //        );
-//        subqueryCommand.select(subCommand.get("id"));
+//        subqueryCommand.baseSelect(subCommand.get("id"));
 
 //        --
 

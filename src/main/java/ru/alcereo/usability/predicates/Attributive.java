@@ -5,7 +5,6 @@ import ru.alcereo.usability.CriteriaBuildData;
 import ru.alcereo.usability.deserializers.AttributiveDeserializer;
 
 import javax.persistence.criteria.*;
-import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,7 @@ import java.util.Map;
 public class Attributive<PARENT_TYPE, SELF_TYPE> {
 
     private Attributive<?,PARENT_TYPE> parent;
-    private SingularAttribute<PARENT_TYPE, SELF_TYPE> attribute;
+    private String attribute;
 
     /**
      * Строковая ссылка, которая будет использована при указании на Join
@@ -21,6 +20,15 @@ public class Attributive<PARENT_TYPE, SELF_TYPE> {
      * ЗЫ для таблиц с указанием пути будет конкатенирована с именем пути
      */
     private String viewName;
+
+    public Attributive(String viewName) {
+        this.viewName = viewName;
+    }
+
+    public Attributive(Attributive<?, PARENT_TYPE> parent, String attribute) {
+        this.parent = parent;
+        this.attribute = attribute;
+    }
 
     public Path<SELF_TYPE> getExpression(final CriteriaBuildData data){
         Map<String, From> links = data.getLinks();
@@ -61,7 +69,6 @@ public class Attributive<PARENT_TYPE, SELF_TYPE> {
         return result;
     }
 
-
     public UPredicate equal(SELF_TYPE subject){
         EqualPredictive<SELF_TYPE> result = new EqualPredictive<>();
 
@@ -90,11 +97,11 @@ public class Attributive<PARENT_TYPE, SELF_TYPE> {
         this.parent = parent;
     }
 
-    public SingularAttribute<PARENT_TYPE, SELF_TYPE> getAttribute() {
+    public String getAttribute() {
         return attribute;
     }
 
-    public void setAttribute(SingularAttribute<PARENT_TYPE, SELF_TYPE> attribute) {
+    public void setAttribute(String attribute) {
         this.attribute = attribute;
     }
 

@@ -1,61 +1,48 @@
 package ru.alcereo.usability.meta;
 
-import org.hibernate.SessionFactory;
+import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.ParametersEntity;
+import ru.alcereo.usability.USelect;
 import ru.alcereo.usability.annotations.UMetaClass;
+import ru.alcereo.usability.annotations.UMetaMethod;
 import ru.alcereo.usability.predicates.Attributive;
-
-import javax.persistence.metamodel.*;
 
 /**
  * Created by alcereo on 28.04.17.
  */
 @UMetaClass("Parameters")
-public class Parameters_ {
+public class Parameters_ extends UBaseMetaClass{
 
-    private static volatile SingularAttribute<ParametersEntity, Integer> id;
-    private static volatile SingularAttribute<ParametersEntity, String> name;
+    public static final Attributive<?, ParametersEntity> table =
+            new Attributive<>(ParametersEntity.class.getName());
 
-    static {
-        SessionFactory factory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
-        id = (SingularAttribute<ParametersEntity, Integer>)
-                factory.getMetamodel()
-                .entity(ParametersEntity.class)
-                .getSingularAttribute("id", Integer.class);
+    public static final Attributive<ParametersEntity,Integer> id =
+            new Attributive<>(table,"id");
 
-        name = (SingularAttribute<ParametersEntity, String>)
-                factory.getMetamodel()
-                        .entity(ParametersEntity.class)
-                        .getSingularAttribute("name", String.class);
-    }
+    public static final Attributive<ParametersEntity, String> name =
+            new Attributive<>(table,"name");
 
-
+    @UMetaMethod
     public static Attributive<?,ParametersEntity> table(){
-        Attributive<?, ParametersEntity> result = new Attributive<>();
-        result.setViewName(ParametersEntity.class.getName());
-
-        return result;
+        return table;
     }
 
+    @UMetaMethod
     public static Attributive<ParametersEntity,Integer> id(){
-        Attributive<ParametersEntity, Integer> result = new Attributive<>();
-
-        result.setParent(table());
-        result.setAttribute(id);
-
-        return result;
+        return id;
     }
 
+    @UMetaMethod
     public static Attributive<ParametersEntity, String> name(){
-        Attributive<ParametersEntity, String> result = new Attributive<>();
-
-        result.setParent(table());
-        result.setAttribute(name);
-
-        return result;
+        return name;
     }
 
-
-
+    /**
+     * Этого метода быть не должно.
+     * Билдер в идеале должен инжектиться.
+     */
+    public static USelect<ParametersEntity> select(QueryBuilder queryBuilder){
+        return baseSelect(queryBuilder, ParametersEntity.class);
+    }
 
 }

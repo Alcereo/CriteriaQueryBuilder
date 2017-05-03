@@ -1,84 +1,48 @@
 package ru.alcereo.usability.meta;
 
-import org.hibernate.SessionFactory;
 import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
-import ru.alcereo.usability.annotations.UMetaClass;
-import ru.alcereo.usability.predicates.Attributive;
 import ru.alcereo.usability.USelect;
-
-import javax.persistence.metamodel.SingularAttribute;
+import ru.alcereo.usability.annotations.UMetaClass;
+import ru.alcereo.usability.annotations.UMetaMethod;
+import ru.alcereo.usability.predicates.Attributive;
 
 /**
  * Created by alcereo on 30.04.17.
  */
 @UMetaClass("ProcessorsVersions")
-public class ProcessorsVersions_ {
+public class ProcessorsVersions_ extends UBaseMetaClass {
 
-    private static volatile SingularAttribute<ProcessorsVersionsEntity, Integer> idSingularAttribute;
-    private static volatile SingularAttribute<ProcessorsVersionsEntity, String> nameSingularAttribute;
+    public static final Attributive<?, ProcessorsVersionsEntity> table =
+            new Attributive<>(ProcessorsVersionsEntity.class.getName());
 
-    static {
-        SessionFactory factory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
-        idSingularAttribute = (SingularAttribute<ProcessorsVersionsEntity, Integer>)
-                factory.getMetamodel()
-                        .entity(ProcessorsVersionsEntity.class)
-                        .getSingularAttribute("id", Integer.class);
+    public static final Attributive<ProcessorsVersionsEntity,Integer> id =
+            new Attributive<>(table,"id");
 
-        nameSingularAttribute = (SingularAttribute<ProcessorsVersionsEntity, String>)
-                factory.getMetamodel()
-                        .entity(ProcessorsVersionsEntity.class)
-                        .getSingularAttribute("name", String.class);
-    }
+    public static final Attributive<ProcessorsVersionsEntity, String> name =
+            new Attributive<>(table,"name");
 
-
+    @UMetaMethod
     public static Attributive<?,ProcessorsVersionsEntity> table(){
-        Attributive<?, ProcessorsVersionsEntity> result = new Attributive<>();
-        result.setViewName(ProcessorsVersionsEntity.class.getName());
-
-        return result;
+        return table;
     }
 
+    @UMetaMethod
     public static Attributive<ProcessorsVersionsEntity,Integer> id(){
-        Attributive<ProcessorsVersionsEntity, Integer> result = new Attributive<>();
-
-        result.setParent(table());
-        result.setAttribute(idSingularAttribute);
-
-        return result;
+        return id;
     }
 
+    @UMetaMethod
     public static Attributive<ProcessorsVersionsEntity, String> name(){
-        Attributive<ProcessorsVersionsEntity, String> result = new Attributive<>();
-
-        result.setParent(table());
-        result.setAttribute(nameSingularAttribute);
-
-        return result;
+        return name;
     }
 
     /**
      * Этого метода быть не должно.
      * Билдер в идеале должен инжектиться.
-     * @param queryBuilder
-     * @return
-     * @deprecated
      */
     public static USelect<ProcessorsVersionsEntity> select(QueryBuilder queryBuilder){
-        USelect<ProcessorsVersionsEntity> result = new USelect<>(ProcessorsVersionsEntity.class);
-        result.setqBuilder(queryBuilder);
-
-        return result;
-    }
-
-    /**
-     * Будет работать когда будет инжектиться билдер
-     * @return
-     */
-    public static USelect<ProcessorsVersionsEntity> select(){
-        USelect<ProcessorsVersionsEntity> result = new USelect<>(ProcessorsVersionsEntity.class);
-
-        return result;
+        return baseSelect(queryBuilder, ProcessorsVersionsEntity.class);
     }
 
 }

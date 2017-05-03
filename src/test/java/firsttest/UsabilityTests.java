@@ -38,26 +38,10 @@ public class UsabilityTests {
 
         final String PARAMETERS = "PARAMETERS_LINK";
 
-        Attributive<?,ParametersEntity> parametersTable = new Attributive<>();
-        parametersTable.setViewName("PARAMETERS_LINK");
+        Attributive<?,ParametersEntity> parametersTable = new Attributive<>("PARAMETERS_LINK");
+        Attributive<ParametersEntity,Integer> parameters_id = new Attributive<>(parametersTable, "id");
+        Attributive<ParametersEntity,String> parameters_name = new Attributive<>(parametersTable, "name");
 
-        Attributive<ParametersEntity,Integer> parameters_id = new Attributive<>();
-        parameters_id.setParent(parametersTable);
-        parameters_id.setAttribute(
-                (SingularAttribute<ParametersEntity, Integer>)
-                        factory.getMetamodel()
-                                .entity(ParametersEntity.class)
-                                .getSingularAttribute("id", Integer.class)
-        );
-
-        Attributive<ParametersEntity,String> parameters_name = new Attributive<>();
-        parameters_name.setParent(parametersTable);
-        parameters_name.setAttribute(
-                (SingularAttribute<ParametersEntity, String>)
-                        factory.getMetamodel()
-                                .entity(ParametersEntity.class)
-                                .getSingularAttribute("name", String.class)
-        );
 
         UPredicate mainPredicate;
 

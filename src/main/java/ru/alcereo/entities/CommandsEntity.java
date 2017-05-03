@@ -1,5 +1,7 @@
 package ru.alcereo.entities;
 
+import org.hibernate.annotations.MetaValue;
+
 import javax.persistence.*;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Path;
