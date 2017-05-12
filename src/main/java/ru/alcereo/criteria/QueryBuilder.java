@@ -180,14 +180,12 @@ public class QueryBuilder {
                         .collect(Collectors.toList());
 
                 finalQuery.orderBy(orders);
-                //finalQuery.getRestriction().getExpressions().stream().forEach(x -> System.out.println(x.getJavaType()));
 
                 resultList = session
                         .createQuery(finalQuery)
                         .setFirstResult(paginationData.getFirst())
                         .setMaxResults(paginationData.getPageSize())
                         .getResultList();
-
             }
 
             return resultList;

@@ -7,7 +7,6 @@ import org.hibernate.query.QueryParameter;
 import org.hibernate.query.QueryProducer;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.Type;
-import ru.alcereo.entities.CommandsEntity;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
@@ -23,7 +22,7 @@ import java.util.stream.Stream;
 /**
  * Created by maxim_000 on 12.05.2017.
  */
-public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
+public class QueryStub<TEntity> implements org.hibernate.query.Query<TEntity>{
 
     @Override
     public QueryProducer getProducer() {
@@ -36,72 +35,72 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public Optional<CommandsEntity> uniqueResultOptional() {
+    public Optional<TEntity> uniqueResultOptional() {
         return null;
     }
 
     @Override
-    public Stream<CommandsEntity> stream() {
+    public Stream<TEntity> stream() {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(Parameter<Instant> param, Instant value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(Parameter<Instant> param, Instant value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(Parameter<LocalDateTime> param, LocalDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(Parameter<LocalDateTime> param, LocalDateTime value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(Parameter<ZonedDateTime> param, ZonedDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(Parameter<ZonedDateTime> param, ZonedDateTime value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(Parameter<OffsetDateTime> param, OffsetDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(Parameter<OffsetDateTime> param, OffsetDateTime value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(String name, Instant value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(String name, Instant value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(String name, LocalDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(String name, LocalDateTime value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(String name, ZonedDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(String name, ZonedDateTime value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(String name, OffsetDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(String name, OffsetDateTime value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(int position, Instant value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(int position, Instant value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(int position, LocalDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(int position, LocalDateTime value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(int position, ZonedDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(int position, ZonedDateTime value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(int position, OffsetDateTime value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(int position, OffsetDateTime value, TemporalType temporalType) {
         return null;
     }
 
@@ -116,12 +115,12 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public List<CommandsEntity> list() {
+    public List<TEntity> list() {
         return new ArrayList<>();
     }
 
     @Override
-    public CommandsEntity uniqueResult() {
+    public TEntity uniqueResult() {
         return null;
     }
 
@@ -176,7 +175,7 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setMaxResults(int maxResult) {
+    public org.hibernate.query.Query<TEntity> setMaxResults(int maxResult) {
         return this;
     }
 
@@ -186,7 +185,7 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setFirstResult(int startPosition) {
+    public org.hibernate.query.Query<TEntity> setFirstResult(int startPosition) {
         return this;
     }
 
@@ -196,7 +195,7 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setHint(String hintName, Object value) {
+    public org.hibernate.query.Query<TEntity> setHint(String hintName, Object value) {
         return null;
     }
 
@@ -206,52 +205,52 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public <T> org.hibernate.query.Query<CommandsEntity> setParameter(Parameter<T> param, T value) {
+    public <T> org.hibernate.query.Query<TEntity> setParameter(Parameter<T> param, T value) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(Parameter<Date> param, Date value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(Parameter<Date> param, Date value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(String name, Object value) {
+    public org.hibernate.query.Query<TEntity> setParameter(String name, Object value) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(String name, Object val, Type type) {
+    public org.hibernate.query.Query<TEntity> setParameter(String name, Object val, Type type) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(String name, Calendar value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(String name, Calendar value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(String name, Date value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(String name, Date value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(int position, Object value) {
+    public org.hibernate.query.Query<TEntity> setParameter(int position, Object value) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(int position, Calendar value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(int position, Calendar value, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(int position, Date value, TemporalType temporalType) {
+    public org.hibernate.query.Query<TEntity> setParameter(int position, Date value, TemporalType temporalType) {
         return null;
     }
 
@@ -301,37 +300,37 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public <T> org.hibernate.query.Query<CommandsEntity> setParameter(QueryParameter<T> parameter, T val) {
+    public <T> org.hibernate.query.Query<TEntity> setParameter(QueryParameter<T> parameter, T val) {
         return null;
     }
 
     @Override
-    public <P> org.hibernate.query.Query<CommandsEntity> setParameter(int position, P val, TemporalType temporalType) {
+    public <P> org.hibernate.query.Query<TEntity> setParameter(int position, P val, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public <P> org.hibernate.query.Query<CommandsEntity> setParameter(QueryParameter<P> parameter, P val, Type type) {
+    public <P> org.hibernate.query.Query<TEntity> setParameter(QueryParameter<P> parameter, P val, Type type) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameter(int position, Object val, Type type) {
+    public org.hibernate.query.Query<TEntity> setParameter(int position, Object val, Type type) {
         return null;
     }
 
     @Override
-    public <P> org.hibernate.query.Query<CommandsEntity> setParameter(QueryParameter<P> parameter, P val, TemporalType temporalType) {
+    public <P> org.hibernate.query.Query<TEntity> setParameter(QueryParameter<P> parameter, P val, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public <P> org.hibernate.query.Query<CommandsEntity> setParameter(String name, P val, TemporalType temporalType) {
+    public <P> org.hibernate.query.Query<TEntity> setParameter(String name, P val, TemporalType temporalType) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setFlushMode(FlushModeType flushMode) {
+    public org.hibernate.query.Query<TEntity> setFlushMode(FlushModeType flushMode) {
         return null;
     }
 
@@ -341,7 +340,7 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setLockMode(LockModeType lockMode) {
+    public org.hibernate.query.Query<TEntity> setLockMode(LockModeType lockMode) {
         return null;
     }
 
@@ -356,7 +355,7 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setReadOnly(boolean readOnly) {
+    public org.hibernate.query.Query<TEntity> setReadOnly(boolean readOnly) {
         return null;
     }
 
@@ -366,12 +365,12 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setHibernateFlushMode(FlushMode flushMode) {
+    public org.hibernate.query.Query<TEntity> setHibernateFlushMode(FlushMode flushMode) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setCacheMode(CacheMode cacheMode) {
+    public org.hibernate.query.Query<TEntity> setCacheMode(CacheMode cacheMode) {
         return null;
     }
 
@@ -381,12 +380,12 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setCacheable(boolean cacheable) {
+    public org.hibernate.query.Query<TEntity> setCacheable(boolean cacheable) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setCacheRegion(String cacheRegion) {
+    public org.hibernate.query.Query<TEntity> setCacheRegion(String cacheRegion) {
         return null;
     }
 
@@ -396,12 +395,12 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setTimeout(int timeout) {
+    public org.hibernate.query.Query<TEntity> setTimeout(int timeout) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setFetchSize(int fetchSize) {
+    public org.hibernate.query.Query<TEntity> setFetchSize(int fetchSize) {
         return null;
     }
 
@@ -411,72 +410,72 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setLockOptions(LockOptions lockOptions) {
+    public org.hibernate.query.Query<TEntity> setLockOptions(LockOptions lockOptions) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setLockMode(String alias, LockMode lockMode) {
+    public org.hibernate.query.Query<TEntity> setLockMode(String alias, LockMode lockMode) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setComment(String comment) {
+    public org.hibernate.query.Query<TEntity> setComment(String comment) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> addQueryHint(String hint) {
+    public org.hibernate.query.Query<TEntity> addQueryHint(String hint) {
         return null;
     }
 
     @Override
-    public Iterator<CommandsEntity> iterate() {
+    public Iterator<TEntity> iterate() {
         return null;
     }
 
     @Override
-    public <P> org.hibernate.query.Query<CommandsEntity> setParameterList(QueryParameter<P> parameter, Collection<P> values) {
+    public <P> org.hibernate.query.Query<TEntity> setParameterList(QueryParameter<P> parameter, Collection<P> values) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameterList(String name, Collection values) {
+    public org.hibernate.query.Query<TEntity> setParameterList(String name, Collection values) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameterList(String name, Collection values, Type type) {
+    public org.hibernate.query.Query<TEntity> setParameterList(String name, Collection values, Type type) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameterList(String name, Object[] values, Type type) {
+    public org.hibernate.query.Query<TEntity> setParameterList(String name, Object[] values, Type type) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setParameterList(String name, Object[] values) {
+    public org.hibernate.query.Query<TEntity> setParameterList(String name, Object[] values) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setProperties(Object bean) {
+    public org.hibernate.query.Query<TEntity> setProperties(Object bean) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setProperties(Map bean) {
+    public org.hibernate.query.Query<TEntity> setProperties(Map bean) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setEntity(int position, Object val) {
+    public org.hibernate.query.Query<TEntity> setEntity(int position, Object val) {
         return null;
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setEntity(String name, Object val) {
+    public org.hibernate.query.Query<TEntity> setEntity(String name, Object val) {
         return null;
     }
 
@@ -491,7 +490,7 @@ public class QueryStub implements org.hibernate.query.Query<CommandsEntity>{
     }
 
     @Override
-    public org.hibernate.query.Query<CommandsEntity> setResultTransformer(ResultTransformer transformer) {
+    public org.hibernate.query.Query<TEntity> setResultTransformer(ResultTransformer transformer) {
         return null;
     }
 
