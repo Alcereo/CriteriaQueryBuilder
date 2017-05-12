@@ -5,13 +5,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.hibernate.query.criteria.internal.predicate.ComparisonPredicate;
+import org.hibernate.cfg.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.alcereo.criteria.QueryBuilder;
-import ru.alcereo.entities.CommandsEntity;
+import ru.alcereo.entities.*;
 import unitTests.criteria.config.TestConfig;
 import unitTests.criteria.fakes.stubs.QueryStub;
 
@@ -31,16 +32,16 @@ public class QueryBuilderTest {
     private QueryBuilder qBuilder;
 
     @Autowired
-    private SessionFactory mockedSessionFactory;
+    private SessionFactory stubbedSessionFactory;
 
     @Test
     public void resultList_addWhiteFilter_checkCriteria() throws Exception {
         Session session = mock(Session.class);
-        when(mockedSessionFactory.openSession()).thenReturn(session);
-        CriteriaBuilderImpl cb1 = spy(new CriteriaBuilderImpl((SessionFactoryImpl) new org.hibernate.cfg.Configuration().configure().buildSessionFactory()));
-        when(session.getCriteriaBuilder()).thenReturn(cb1);
-        CriteriaQuery<CommandsEntity> criteriaQuery = spy(cb1.createQuery(CommandsEntity.class));
-        when(cb1.createQuery(CommandsEntity.class)).thenReturn(criteriaQuery);
+        when(stubbedSessionFactory.openSession()).thenReturn(session);
+        CriteriaBuilderImpl spyCriteriaBuilder = spy(new CriteriaBuilderImpl((SessionFactoryImpl) createSessionFactory()));
+        when(session.getCriteriaBuilder()).thenReturn(spyCriteriaBuilder);
+        CriteriaQuery<CommandsEntity> criteriaQuery = spy(spyCriteriaBuilder.createQuery(CommandsEntity.class));
+        when(spyCriteriaBuilder.createQuery(CommandsEntity.class)).thenReturn(criteriaQuery);
         when(session.createQuery(criteriaQuery)).thenReturn(new QueryStub());
 
         qBuilder
@@ -54,6 +55,23 @@ public class QueryBuilderTest {
         assertEquals(1, expressions.size());
         ComparisonPredicate expression = (ComparisonPredicate)expressions.get(0);
         assertEquals(ComparisonPredicate.ComparisonOperator.GREATER_THAN_OR_EQUAL, expression.getComparisonOperator());
+    }
+
+    private SessionFactory createSessionFactory() {
+        Configuration configuration = new Configuration();
+        configuration.addAnnotatedClass(CommandsEntity.class)
+                .addAnnotatedClass(ParametersEntity.class)
+                .addAnnotatedClass(ProcessorsEntity.class)
+                .addAnnotatedClass(EventsEntity.class)
+                .addAnnotatedClass(ProcessorsVersionsEntity.class);
+        configuration.setProperty("hibernate.dialect",
+                "org.hibernate.dialect.H2Dialect");
+        configuration.setProperty("hibernate.connection.driver_class",
+                "org.h2.Driver");
+        configuration.setProperty("hibernate.connection.url", "jdbc:h2:mem:test");
+        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
+        SessionFactory sessionFactory = configuration.buildSessionFactory();
+        return sessionFactory;
     }
 }
 

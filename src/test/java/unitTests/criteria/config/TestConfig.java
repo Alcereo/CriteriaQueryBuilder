@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 @ComponentScan("ru.alcereo")
 public class TestConfig {
     @Bean
-    public SessionFactory mockedSessionFactory(){
+    public SessionFactory stubbedSessionFactory(){
         return mock(SessionFactory.class);
     }
 }
