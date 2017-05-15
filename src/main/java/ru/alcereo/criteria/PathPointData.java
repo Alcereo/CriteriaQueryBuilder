@@ -3,7 +3,7 @@ package ru.alcereo.criteria;
 /**
  * Created by alcereo on 29.04.17.
  */
-class PathPointData {
+public class PathPointData {
 
     /**
      * Имя поля которое является связью в ентити

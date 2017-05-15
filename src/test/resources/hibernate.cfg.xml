@@ -12,11 +12,11 @@
         <property name="format_sql">true</property>
         <property name="hbm2ddl.auto">update</property>
 
-        <mapping class="ru.alcereo.entities.CommandsEntity"/>
-        <mapping class="ru.alcereo.entities.EventsEntity"/>
-        <mapping class="ru.alcereo.entities.ParametersEntity"/>
-        <mapping class="ru.alcereo.entities.ProcessorsEntity"/>
-        <mapping class="ru.alcereo.entities.ProcessorsVersionsEntity"/>
+        <mapping class="tests.entities.CommandsEntity"/>
+        <mapping class="tests.entities.EventsEntity"/>
+        <mapping class="tests.entities.ParametersEntity"/>
+        <mapping class="tests.entities.ProcessorsEntity"/>
+        <mapping class="tests.entities.ProcessorsVersionsEntity"/>
 
         <!--<mapping resource="entities_xml/CommandsEntity.hbm.xml"/>-->
         <!--<mapping resource="entities_xml/EventsEntity.hbm.xml"/>-->
