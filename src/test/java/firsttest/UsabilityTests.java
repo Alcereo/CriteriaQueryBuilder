@@ -6,13 +6,16 @@ import org.junit.Test;
 import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
+import ru.alcereo.futils.Function2;
 import ru.alcereo.usability.*;
 import ru.alcereo.usability.meta.Commands_;
 import ru.alcereo.usability.meta.Parameters_;
 import ru.alcereo.usability.meta.ProcessorsVersions_;
 import ru.alcereo.usability.predicates.*;
 
-import javax.persistence.metamodel.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
 
 /**
  * Created by alcereo on 27.04.17.
@@ -175,6 +178,35 @@ public class UsabilityTests {
                 .getResultList()
                 .forEach(System.out::println);
 
+    }
+
+    @Test
+    public void testForUsabilityOfPagination(){
+
+        ProcessorsVersions_
+                .select(qBuilder)
+                .setPagination(0, 1)
+                .getResultList()
+                .forEach(System.out::println);
+
+        ProcessorsVersions_
+                .select(qBuilder)
+                .setPagination(1, 2)
+                .getResultList()
+                .forEach(System.out::println);
+
+    }
+
+    @Test
+    public void testForUsabilityOfOrdering(){
+        Function2<CriteriaBuilder, Root<ProcessorsVersionsEntity>, Order> orderFunction =
+                (cb, root) -> cb.desc(root.get("name"));
+
+        ProcessorsVersions_
+                .select(qBuilder)
+                .addOrder(orderFunction)
+                .getResultList()
+                .forEach(System.out::println);
     }
 
 }
