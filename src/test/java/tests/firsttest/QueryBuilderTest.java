@@ -1,5 +1,6 @@
 package tests.firsttest;
 
+import ru.alcereo.criteria.OrderInfo;
 import tests.firsttest.config.TestConfig;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -259,7 +260,7 @@ public class QueryBuilderTest {
                 .addWhiteFilter(
                         (cb, links, root) -> cb.greaterThan(root.get("id"), 0)
                 )
-                .addOrder((cb, root) -> cb.asc(root.get("name")))
+                .addOrder(new OrderInfo(OrderInfo.Direction.ASC, "name"))
                 .setPagination(2, 3)
                 .getResultList()
                 .forEach(System.out::println);

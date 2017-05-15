@@ -9,17 +9,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.alcereo.criteria.QueryBuilder;
 import tests.entities.ParametersEntity;
 import tests.entities.ProcessorsVersionsEntity;
-import ru.alcereo.futils.Function2;
 import ru.alcereo.usability.*;
 import tests.entities.meta.Commands_;
 import tests.entities.meta.Parameters_;
 import tests.entities.meta.ProcessorsVersions_;
 import ru.alcereo.usability.predicates.*;
 import tests.firsttest.config.TestConfig;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Root;
 
 /**
  * Created by alcereo on 27.04.17.
@@ -199,12 +194,15 @@ public class UsabilityTests {
 
     @Test
     public void testForUsabilityOfOrdering(){
-        Function2<CriteriaBuilder, Root<ProcessorsVersionsEntity>, Order> orderFunction =
-                (cb, root) -> cb.desc(root.get("name"));
+        ProcessorsVersions_
+                .select()
+                .addDescOrder(ProcessorsVersions_.name())
+                .getResultList(qBuilder)
+                .forEach(System.out::println);
 
         ProcessorsVersions_
                 .select()
-                .addOrder(orderFunction)
+                .addAscOrder(ProcessorsVersions_.name())
                 .getResultList(qBuilder)
                 .forEach(System.out::println);
     }
