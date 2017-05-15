@@ -168,7 +168,6 @@ public class UsabilityTests {
     public void testForFullUsability(){
 
         ProcessorsVersions_
-//                TODO: qBuilder - будет инжектиться
                 .select()
                 .where(
                         Commands_.id().in(1,2)
