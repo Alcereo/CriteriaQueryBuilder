@@ -1,6 +1,5 @@
 package tests.entities.meta;
 
-import ru.alcereo.criteria.QueryBuilder;
 import tests.entities.CommandsEntity;
 import tests.entities.ParametersEntity;
 import ru.alcereo.usability.USelect;
@@ -42,8 +41,8 @@ public class Commands_  extends UBaseMetaClass{
      * Этого метода быть не должно.
      * Билдер в идеале должен инжектиться.
      */
-    public static USelect<ParametersEntity> select(QueryBuilder queryBuilder){
-        return baseSelect(queryBuilder, ParametersEntity.class);
+    public static USelect<ParametersEntity> select(){
+        return baseSelect(ParametersEntity.class);
     }
 
 }

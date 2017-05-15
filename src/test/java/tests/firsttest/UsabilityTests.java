@@ -169,14 +169,14 @@ public class UsabilityTests {
 
         ProcessorsVersions_
 //                TODO: qBuilder - будет инжектиться
-                .select(qBuilder)
+                .select()
                 .where(
                         Commands_.id().in(1,2)
                         .or(
                                 Commands_.name().in("admin", "some other")
                         )
                 )
-                .getResultList()
+                .getResultList(qBuilder)
                 .forEach(System.out::println);
 
     }
@@ -185,15 +185,15 @@ public class UsabilityTests {
     public void testForUsabilityOfPagination(){
 
         ProcessorsVersions_
-                .select(qBuilder)
+                .select()
                 .setPagination(0, 1)
-                .getResultList()
+                .getResultList(qBuilder)
                 .forEach(System.out::println);
 
         ProcessorsVersions_
-                .select(qBuilder)
+                .select()
                 .setPagination(1, 2)
-                .getResultList()
+                .getResultList(qBuilder)
                 .forEach(System.out::println);
 
     }
@@ -204,9 +204,9 @@ public class UsabilityTests {
                 (cb, root) -> cb.desc(root.get("name"));
 
         ProcessorsVersions_
-                .select(qBuilder)
+                .select()
                 .addOrder(orderFunction)
-                .getResultList()
+                .getResultList(qBuilder)
                 .forEach(System.out::println);
     }
 

@@ -42,9 +42,9 @@ public class DeserializationTest {
 
         ProcessorsVersions_
 //                TODO: qBuilder - будет инжектиться
-                .select(qBuilder)
+                .select()
                 .where(predicate)
-                .getResultList()
+                .getResultList(qBuilder)
                 .forEach(System.out::println);
 
     }

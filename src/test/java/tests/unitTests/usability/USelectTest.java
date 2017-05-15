@@ -25,15 +25,12 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = TestConfig.class)
 public class USelectTest {
 
-    @Autowired
-    private QueryBuilder qBuilder;
-
     @Test
     public void setPagination_CorrectParams_SetFields() {
         int offset = 1;
         int pageSize = 1000;
 
-        USelect uSelect = ProcessorsVersions_.select(qBuilder)
+        USelect uSelect = ProcessorsVersions_.select()
                 .setPagination(offset, pageSize);
 
         assertEquals(offset, uSelect.getPaginationFirstPage());
@@ -45,7 +42,7 @@ public class USelectTest {
         Function2<CriteriaBuilder, Root<ProcessorsVersionsEntity>, Order> orderFunction =
                 (cb, root) -> cb.asc(root.get("name"));
 
-        USelect uSelect = ProcessorsVersions_.select(qBuilder)
+        USelect uSelect = ProcessorsVersions_.select()
                 .addOrder(orderFunction);
 
         assertEquals(1, uSelect.getOrdersFunctions().size());
@@ -59,7 +56,7 @@ public class USelectTest {
         Function2<CriteriaBuilder, Root<ProcessorsVersionsEntity>, Order> orderFunction2 =
                 (cb, root) -> cb.asc(root.get("name"));
 
-        USelect uSelect = ProcessorsVersions_.select(qBuilder)
+        USelect uSelect = ProcessorsVersions_.select()
                 .addOrder(orderFunction1)
                 .addOrder(orderFunction2);
 

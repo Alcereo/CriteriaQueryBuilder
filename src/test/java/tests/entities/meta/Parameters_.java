@@ -41,8 +41,8 @@ public class Parameters_ extends UBaseMetaClass{
      * Этого метода быть не должно.
      * Билдер в идеале должен инжектиться.
      */
-    public static USelect<ParametersEntity> select(QueryBuilder queryBuilder){
-        return baseSelect(queryBuilder, ParametersEntity.class);
+    public static USelect<ParametersEntity> select(){
+        return baseSelect(ParametersEntity.class);
     }
 
 }

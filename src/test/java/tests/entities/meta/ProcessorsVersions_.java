@@ -1,6 +1,5 @@
 package tests.entities.meta;
 
-import ru.alcereo.criteria.QueryBuilder;
 import tests.entities.ProcessorsVersionsEntity;
 import ru.alcereo.usability.USelect;
 import ru.alcereo.usability.annotations.UMetaClass;
@@ -41,8 +40,8 @@ public class ProcessorsVersions_ extends UBaseMetaClass {
      * Этого метода быть не должно.
      * Билдер в идеале должен инжектиться.
      */
-    public static USelect<ProcessorsVersionsEntity> select(QueryBuilder queryBuilder){
-        return baseSelect(queryBuilder, ProcessorsVersionsEntity.class);
+    public static USelect<ProcessorsVersionsEntity> select(){
+        return baseSelect(ProcessorsVersionsEntity.class);
     }
 
 }

@@ -16,9 +16,6 @@ import java.util.List;
  * Created by alcereo on 30.04.17.
  */
 public class USelect<TYPE> {
-
-    private QueryBuilder qBuilder;
-
     private final Class<TYPE> startEntity;
     private List<UPredicate> whitePredicates = new ArrayList<>();
     private List<UPredicate> blackPredicates = new ArrayList<>();
@@ -66,8 +63,7 @@ public class USelect<TYPE> {
         return ordersFunctions;
     }
 
-    public List<TYPE> getResultList(){
-
+    public List<TYPE> getResultList(QueryBuilder qBuilder){
         QueryBuilder.QueryData<TYPE> queryData = qBuilder.selectFrom(startEntity);
 
         whitePredicates
@@ -128,9 +124,5 @@ public class USelect<TYPE> {
         return queryData
                 .setPagination(this.offset, this.pageSize)
                 .getResultList();
-    }
-
-    public void setqBuilder(QueryBuilder qBuilder) {
-        this.qBuilder = qBuilder;
     }
 }
