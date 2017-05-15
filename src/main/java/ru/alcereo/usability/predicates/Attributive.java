@@ -5,6 +5,7 @@ import ru.alcereo.usability.CriteriaBuildData;
 import ru.alcereo.usability.deserializers.AttributiveDeserializer;
 
 import javax.persistence.criteria.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -51,31 +52,16 @@ public class Attributive<PARENT_TYPE, SELF_TYPE> {
 //    ciclic methods
 
     public final UPredicate in(List<SELF_TYPE> subjects){
-        InPredictive<SELF_TYPE> result = new InPredictive<>();
-
-        result.setAttributive(this);
-        result.setSubjects(subjects);
-
-        return result;
+        return new InPredictive<>(this, subjects);
     }
 
     @SafeVarargs
     public final UPredicate in(SELF_TYPE... subjects){
-        InPredictive<SELF_TYPE> result = new InPredictive<>();
-
-        result.setAttributive(this);
-        result.setSubjects(subjects);
-
-        return result;
+        return new InPredictive<>(this, Arrays.asList(subjects));
     }
 
     public UPredicate equal(SELF_TYPE subject){
-        EqualPredictive<SELF_TYPE> result = new EqualPredictive<>();
-
-        result.setAttributive(this);
-        result.setSubject(subject);
-
-        return result;
+        return new EqualPredictive<>(this, subject);
     }
 
     public UPredicate greaterThan(SELF_TYPE subject){

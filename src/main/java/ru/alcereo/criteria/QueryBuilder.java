@@ -3,12 +3,16 @@ package ru.alcereo.criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import ru.alcereo.entities.CommandsEntity;
 import ru.alcereo.entities.ParametersEntity;
 import ru.alcereo.entities.ProcessorsEntity;
 import ru.alcereo.entities.ProcessorsVersionsEntity;
 import ru.alcereo.futils.*;
 
+import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.util.*;
 import java.util.function.Consumer;
@@ -17,6 +21,8 @@ import java.util.stream.Collectors;
 /**
  * Created by alcereo on 22.04.17.
  */
+@Component()
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class QueryBuilder {
 
     @Autowired
@@ -32,139 +38,6 @@ public class QueryBuilder {
 
     public <TYPE> QueryData<TYPE> selectFrom(Class<TYPE> entity) {
         return new QueryData<>(entity);
-    }
-
-    //     * -------------------------------------------------------- *
-    //     *                       СЛУЖЕБНЫЕ                          *
-    //     * -------------------------------------------------------- *
-
-    private <TYPE> Predicate buildPredicatePrepareRoot(CriteriaBuilder cb,
-                                                             Root<TYPE> root,
-                                                             Class<TYPE> startEntity,
-                                                             Map<PathView, String> pathLinks,
-                                                             List<Function3<CriteriaBuilder,
-                                                                     Map<String, From>,
-                                                                     Root<TYPE>,
-                                                                     Predicate>> predicates
-    ) {
-
-        Predicate finalPredicate;
-        Map<String, From> joins = new HashMap<>();
-
-        List<PathPoint> path = getPathMap(startEntity, pathLinks);
-
-        From lastJoin = root;
-
-        for (PathPoint pathPoint : path) {
-            lastJoin = lastJoin.join(
-                    pathPoint
-                            .getPathPointData()
-                            .getPropertyName(),
-                    JoinType.LEFT
-            );
-            joins.put(
-                    pathPoint.getLinkName(),
-                    lastJoin
-            );
-        }
-
-        finalPredicate = cb.and(
-                predicates
-                        .stream()
-                        .map(predicate -> predicate.apply(cb, joins, root))
-                        .collect(Collectors.toList())
-                        .toArray(new Predicate[0])
-        );
-
-        return finalPredicate;
-
-    }
-
-    private static <TYPE> List<PathPoint> getPathMap(Class<TYPE> startEntity, Map<PathView, String> pathLinks) {
-
-        List<PathPoint> resultPathPoints = new ArrayList<>();
-
-        if (pathLinks.size()==0)
-            return resultPathPoints;
-
-//        Берем пути
-        List<Path> paths = getPaths(startEntity);
-
-//          Расчитываем пересечение вьюх и точек пути
-//         через спец класс
-        PointViewsCrossExecutor executor =
-                new PointViewsCrossExecutor(pathLinks, paths)
-                        .invoke();
-
-//        TODO: Сделать проход по дереву
-//          Пока проходим только по одному пути
-        if (executor.getPathMaxDepths().size()>1)
-            throw new RuntimeException("Нашли больше одного пути!");
-
-        Path currentPath = executor
-                    .getPathMaxDepths().keySet()
-                    .stream().findFirst().get();
-
-//        Берем из этого пути заготовленный массив PathPoint-ов
-        PathPoint[] fullPathPoints = currentPath.newPathPoints();
-
-//        Берем из мапы максимальный индекс до которого нужно пройтись по этому пути
-        Integer maxIndex = executor.getPathMaxDepths().get(currentPath);
-
-//        Заполняем наши точки до нужного индекса
-        resultPathPoints
-                .addAll(
-                        Arrays.asList(fullPathPoints)
-                                .subList(0, maxIndex)
-                );
-
-
-//        Заполняем в наших поинтах инфу о линках
-        executor.forEachLinkPoint(
-                (pathViewLink, path, index) ->
-                        resultPathPoints
-                                .get(index)
-                                .setLinkName(pathViewLink)
-        );
-
-        return resultPathPoints;
-    }
-
-    private static <TYPE> List<Path> getPaths(Class<TYPE> entity) {
-        List<Path> paths = new ArrayList<>();
-
-        if (entity.equals(ProcessorsVersionsEntity.class)){
-            Path path1 = new Path();
-            paths.add(path1);
-            ArrayList<PathPointData> pathPoints = new ArrayList<>();
-            path1.setPathPointDataList(pathPoints);
-            path1.setPathName("P1");
-
-            pathPoints.add(
-                    new PathPointData(
-                            "processorsUsed",
-                            ProcessorsEntity.class
-                    )
-            );
-
-            pathPoints.add(
-                    new PathPointData(
-                            "commands",
-                            CommandsEntity.class
-                    )
-            );
-
-            pathPoints.add(
-                    new PathPointData(
-                            "parameters",
-                            ParametersEntity.class
-                    )
-            );
-
-            path1.updatePathPoints();
-        }
-
-        return paths;
     }
 
 
@@ -262,7 +135,6 @@ public class QueryBuilder {
         }
 
         public List<TYPE> getResultList() {
-
             List<TYPE> resultList = null;
 
             try(Session session = factory.openSession()) {
@@ -300,7 +172,6 @@ public class QueryBuilder {
                     );
 
                 } else {
-
                     finalQuery.where(whitePredicate);
                 }
 
@@ -315,10 +186,142 @@ public class QueryBuilder {
                         .setFirstResult(paginationData.getFirst())
                         .setMaxResults(paginationData.getPageSize())
                         .getResultList();
-
             }
 
             return resultList;
+        }
+
+        //     * -------------------------------------------------------- *
+        //     *                       СЛУЖЕБНЫЕ                          *
+        //     * -------------------------------------------------------- *
+
+        private <TYPE> Predicate buildPredicatePrepareRoot(CriteriaBuilder cb,
+                                                           Root<TYPE> root,
+                                                           Class<TYPE> startEntity,
+                                                           Map<PathView, String> pathLinks,
+                                                           List<Function3<CriteriaBuilder,
+                                                                   Map<String, From>,
+                                                                   Root<TYPE>,
+                                                                   Predicate>> predicates
+        ) {
+
+            Predicate finalPredicate;
+            Map<String, From> joins = new HashMap<>();
+
+            List<PathPoint> path = getPathMap(startEntity, pathLinks);
+
+            From lastJoin = root;
+
+            for (PathPoint pathPoint : path) {
+                lastJoin = lastJoin.join(
+                        pathPoint
+                                .getPathPointData()
+                                .getPropertyName(),
+                        JoinType.LEFT
+                );
+                joins.put(
+                        pathPoint.getLinkName(),
+                        lastJoin
+                );
+            }
+
+            finalPredicate = cb.and(
+                    predicates
+                            .stream()
+                            .map(predicate -> predicate.apply(cb, joins, root))
+                            .collect(Collectors.toList())
+                            .toArray(new Predicate[0])
+            );
+
+            return finalPredicate;
+
+        }
+
+        private <TYPE> List<PathPoint> getPathMap(Class<TYPE> startEntity, Map<PathView, String> pathLinks) {
+
+            List<PathPoint> resultPathPoints = new ArrayList<>();
+
+            if (pathLinks.size()==0)
+                return resultPathPoints;
+
+//        Берем пути
+            List<Path> paths = getPaths(startEntity);
+
+//          Расчитываем пересечение вьюх и точек пути
+//         через спец класс
+            PointViewsCrossExecutor executor =
+                    new PointViewsCrossExecutor(pathLinks, paths)
+                            .invoke();
+
+//        TODO: Сделать проход по дереву
+//          Пока проходим только по одному пути
+            if (executor.getPathMaxDepths().size()>1)
+                throw new RuntimeException("Нашли больше одного пути!");
+
+            Path currentPath = executor
+                    .getPathMaxDepths().keySet()
+                    .stream().findFirst().get();
+
+//        Берем из этого пути заготовленный массив PathPoint-ов
+            PathPoint[] fullPathPoints = currentPath.newPathPoints();
+
+//        Берем из мапы максимальный индекс до которого нужно пройтись по этому пути
+            Integer maxIndex = executor.getPathMaxDepths().get(currentPath);
+
+//        Заполняем наши точки до нужного индекса
+            resultPathPoints
+                    .addAll(
+                            Arrays.asList(fullPathPoints)
+                                    .subList(0, maxIndex)
+                    );
+
+
+//        Заполняем в наших поинтах инфу о линках
+            executor.forEachLinkPoint(
+                    (pathViewLink, path, index) ->
+                            resultPathPoints
+                                    .get(index)
+                                    .setLinkName(pathViewLink)
+            );
+
+            return resultPathPoints;
+        }
+
+        private <TYPE> List<Path> getPaths(Class<TYPE> entity) {
+            List<Path> paths = new ArrayList<>();
+
+            if (entity.equals(ProcessorsVersionsEntity.class)){
+                Path path1 = new Path();
+                paths.add(path1);
+                ArrayList<PathPointData> pathPoints = new ArrayList<>();
+                path1.setPathPointDataList(pathPoints);
+                path1.setPathName("P1");
+
+                pathPoints.add(
+                        new PathPointData(
+                                "processorsUsed",
+                                ProcessorsEntity.class
+                        )
+                );
+
+                pathPoints.add(
+                        new PathPointData(
+                                "commands",
+                                CommandsEntity.class
+                        )
+                );
+
+                pathPoints.add(
+                        new PathPointData(
+                                "parameters",
+                                ParametersEntity.class
+                        )
+                );
+
+                path1.updatePathPoints();
+            }
+
+            return paths;
         }
 
     }

@@ -1,8 +1,13 @@
 package firsttest;
 
+import firsttest.config.TestConfig;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.alcereo.criteria.QueryBuilder;
 import ru.alcereo.entities.*;
 import ru.alcereo.futils.Function2;
@@ -14,19 +19,21 @@ import java.util.function.Function;
 /**
  * Created by alcereo on 22.04.17.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfig.class)
 public class QueryBuilderTest {
 
-    private static SessionFactory factory;
-    private static QueryBuilder qBuilder;
+    @Autowired
+    private QueryBuilder qBuilder;
+
+    @Autowired
+    private SessionFactory factory;
 
     @BeforeClass
     public static void initDB() {
-        factory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
 
 //        initData(factory);
 
-        qBuilder = new QueryBuilder();
-        qBuilder.setFactory(factory);
     }
 
     public static void initData(SessionFactory factory) {
