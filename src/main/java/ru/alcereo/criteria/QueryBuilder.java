@@ -119,8 +119,18 @@ public class QueryBuilder {
             return this;
         }
 
-        public QueryData<TYPE> addOrder(Function2<CriteriaBuilder, Root<TYPE>, Order> orderLambda){
-            this.ordersFunctions.add(orderLambda);
+        public QueryData<TYPE> addOrder(OrderInfo orderInfo){
+            String attributeName = orderInfo.getField();
+
+            switch (orderInfo.getDirection()) {
+                case ASC:
+                    this.ordersFunctions.add((cb, root) -> cb.asc(root.get(attributeName)));
+                    break;
+                case DESC:
+                    this.ordersFunctions.add((cb, root) -> cb.desc(root.get(attributeName)));
+                    break;
+
+            }
 
             return this;
         }

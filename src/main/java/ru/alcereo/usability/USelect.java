@@ -1,13 +1,11 @@
 package ru.alcereo.usability;
 
+import ru.alcereo.criteria.OrderInfo;
 import ru.alcereo.criteria.PathView;
 import ru.alcereo.criteria.QueryBuilder;
-import ru.alcereo.futils.Function2;
+import ru.alcereo.usability.predicates.Attributive;
 import ru.alcereo.usability.predicates.UPredicate;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +22,7 @@ public class USelect<TYPE> {
     private int offset = 0;
     private int pageSize = 1000;
 
-    private List<Function2<CriteriaBuilder, Root<TYPE>, Order>> ordersFunctions = new ArrayList<>();
+    private List<OrderInfo> ordersInfo = new ArrayList<>();
 
     public USelect(Class<TYPE> startEntity) {
         this.startEntity = startEntity;
@@ -54,13 +52,21 @@ public class USelect<TYPE> {
         return pageSize;
     }
 
-    public USelect<TYPE> addOrder(Function2<CriteriaBuilder, Root<TYPE>, Order> orderLambda){
-        this.ordersFunctions.add(orderLambda);
+    public USelect<TYPE> addAscOrder(Attributive attributive){
+        return this.addOrder(OrderInfo.Direction.ASC, attributive);
+    }
+
+    public USelect<TYPE> addDescOrder(Attributive attributive){
+        return this.addOrder(OrderInfo.Direction.DESC, attributive);
+    }
+
+    private USelect<TYPE> addOrder(OrderInfo.Direction direction, Attributive attributive){
+        this.ordersInfo.add(new OrderInfo(direction, attributive.getAttribute()));
         return this;
     }
 
-    public List<Function2<CriteriaBuilder, Root<TYPE>, Order>> getOrdersFunctions() {
-        return ordersFunctions;
+    public List<OrderInfo> getOrdersInfo() {
+        return ordersInfo;
     }
 
     public List<TYPE> getResultList(QueryBuilder qBuilder){
@@ -119,7 +125,7 @@ public class USelect<TYPE> {
                                 ))
                 );
 
-        ordersFunctions.forEach(queryData::addOrder);
+        ordersInfo.forEach(queryData::addOrder);
 
         return queryData
                 .setPagination(this.offset, this.pageSize)
