@@ -2,31 +2,23 @@ package ru.alcereo.criteria;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import ru.alcereo.entities.CommandsEntity;
-import ru.alcereo.entities.ParametersEntity;
-import ru.alcereo.entities.ProcessorsEntity;
-import ru.alcereo.entities.ProcessorsVersionsEntity;
 import ru.alcereo.futils.*;
 
-import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
  * Created by alcereo on 22.04.17.
  */
-@Component()
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class QueryBuilder {
-
-    @Autowired
+    private Map<Class, List<Path>> pathsMap = new HashMap<>();
     private SessionFactory factory;
+
+    public QueryBuilder(SessionFactory factory, Map<Class, List<Path>> pathsMap) {
+        this.pathsMap = pathsMap;
+        this.factory = factory;
+    }
 
     public void setFactory(SessionFactory factory) {
         this.factory = factory;
@@ -288,40 +280,7 @@ public class QueryBuilder {
         }
 
         private <TYPE> List<Path> getPaths(Class<TYPE> entity) {
-            List<Path> paths = new ArrayList<>();
-
-            if (entity.equals(ProcessorsVersionsEntity.class)){
-                Path path1 = new Path();
-                paths.add(path1);
-                ArrayList<PathPointData> pathPoints = new ArrayList<>();
-                path1.setPathPointDataList(pathPoints);
-                path1.setPathName("P1");
-
-                pathPoints.add(
-                        new PathPointData(
-                                "processorsUsed",
-                                ProcessorsEntity.class
-                        )
-                );
-
-                pathPoints.add(
-                        new PathPointData(
-                                "commands",
-                                CommandsEntity.class
-                        )
-                );
-
-                pathPoints.add(
-                        new PathPointData(
-                                "parameters",
-                                ParametersEntity.class
-                        )
-                );
-
-                path1.updatePathPoints();
-            }
-
-            return paths;
+            return pathsMap.get(entity);
         }
 
     }

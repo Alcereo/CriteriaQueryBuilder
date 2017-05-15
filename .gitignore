@@ -22,6 +22,6 @@
 Будет удалено TestDB/
 Будет удалено derby.log
 Будет удалено src/main/java/ru/alcereo/futils/criteria/
-Будет удалено src/test/java/firsttest/DBTest.java
+Будет удалено src/test/java/tests.firsttest/DBTest.java
 /derby.log
 

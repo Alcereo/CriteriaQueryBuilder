@@ -1,5 +1,5 @@
-import ru.alcereo.usability.meta.Commands_
-import ru.alcereo.usability.meta.ProcessorsVersions_
+import tests.entities.meta.Commands_
+import tests.entities.meta.ProcessorsVersions_
 
 def predicate = Commands_.id greaterThan 3
 
